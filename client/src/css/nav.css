@@ -1,0 +1,55 @@
+.navBarIcon {
+  display: none;
+  overflow: hidden;
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+  box-shadow: 1px 4px 8px rgb(2, 17, 46);
+  border-radius: 5px;
+}
+
+.navBarIcon_top,
+.navBarIcon_mid,
+.navBarIcon_bottom {
+  width: 1.8rem;
+  height: 1px;
+  background-color: #fff;
+  position: absolute;
+  top: 25%;
+  left: 0;
+  transform: translateX(18%);
+  transition: 0.2s;
+}
+
+.navBarIcon_mid {
+  top: 50%;
+  transition: 0.1s;
+}
+
+.navBarIcon_bottom {
+  top: 75%;
+}
+
+.active .navBarIcon_mid {
+  transform: translateX(150%);
+}
+
+.active .navBarIcon_top {
+  top: 50%;
+  /* left: 0%; */
+  transform: rotate(45deg);
+  width: 2.5rem;
+}
+
+.active .navBarIcon_bottom {
+  top: 50%;
+  transform: rotate(135deg);
+  width: 2.5rem;
+}
+
+@media (max-width: 1100px) {
+  .navBarIcon {
+    display: block;
+  }
+}
