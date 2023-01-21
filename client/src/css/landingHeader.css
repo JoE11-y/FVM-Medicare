@@ -139,4 +139,50 @@
   .landingHeader {
     padding: 1.5rem;
   }
+
+  .landingBody {
+    display: block;
+    padding: 1rem 2rem;
+  }
+
+  .landingBody__left {
+    margin-right: 0rem;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .landingBody__left h2 {
+    font-size: 3.5rem;
+    line-height: 3.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .landingBody__right {
+    width: 100%;
+    height: auto;
+  }
+
+  .landingBody__right img {
+    display: none;
+  }
+
+  .shape-1 {
+    top: 7.5rem;
+    height: 4rem;
+    width: 4rem;
+  }
+  .shape-2 {
+    top: 9rem;
+    right: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  .fvm {
+    left: 2rem;
+    top: 70%;
+    bottom: 0;
+    width: 80%;
+    height: 8rem;
+    z-index: -1;
+  }
 }
