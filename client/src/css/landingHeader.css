@@ -17,6 +17,11 @@
   color: #dbf18a;
 }
 
+.landingPage {
+  background: var(--dark-blue);
+  min-height: 100vh;
+}
+
 .landingHeader {
   display: flex;
   justify-content: space-between;
