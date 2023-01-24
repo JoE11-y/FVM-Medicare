@@ -3,6 +3,9 @@
 :root {
   --dark-blue: #010211;
   --blue: #0096c7;
+  --light: #f4f7ea;
+  --mindaro: #edff86;
+  --gunmetal: #272f3f;
 }
 
 * {

@@ -1,0 +1,11 @@
+.dashboard {
+  background: var(--light);
+  min-height: 100vh;
+}
+
+.content {
+  background: rgba(255, 255, 255, 0.45);
+  width: 100%;
+  min-height: 100vh;
+  backdrop-filter: blur(25px);
+}
