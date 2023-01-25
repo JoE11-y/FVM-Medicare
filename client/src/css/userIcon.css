@@ -9,6 +9,7 @@
   font-size: 0.9rem;
   box-shadow: 1px 4px 16px rgba(155, 155, 155, 0.137);
   backdrop-filter: blur(25px);
+  cursor: pointer;
 }
 
 .user-icon img {
