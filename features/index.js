@@ -1,7 +1,8 @@
 const PushAPI = require("@pushprotocol/restapi");
 const ethers = require("ethers");
+require("dotenv").config();
 
-const PK = "399dd247ca1cd2cb6433ffa62d07d336a939b3afdb158575076ad0d86146d5ec"; // channel private key
+const PK = process.env.PRIVATE_KEY; // channel private key
 const Pkey = `0x${PK}`;
 const signer = new ethers.Wallet(Pkey);
 
