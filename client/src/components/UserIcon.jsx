@@ -11,7 +11,7 @@ export const UserIcon = () => {
         <img src={doctor} alt="" />
       </div>
       <span style={{ display: "inline-block", marginRight: "0.5rem" }}>
-        Dr. John Doe
+        John Doe
       </span>
       <Icon component={KeyboardArrowDownIcon} />
     </div>
