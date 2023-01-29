@@ -1,6 +1,7 @@
 import { LandingPage } from "./pages/LandingPage"
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 import { PatientDashboard } from "./pages/PatientDashboard"
+import { DoctorDashboard } from "./pages/DoctorDashboard"
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
         <Routes>
           <Route element={<LandingPage />} path="/" />
           <Route element={<PatientDashboard />} path="/patient-dashboard" />
+          <Route element={<DoctorDashboard />} path="/doctor-dashboard" />
         </Routes>
       </Router>
     </div>
