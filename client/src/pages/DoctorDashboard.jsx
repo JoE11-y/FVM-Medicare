@@ -47,8 +47,11 @@ export const DoctorDashboard = () => {
             ))}
           </div>
           <div>
-            <h4 style={{ marginBottom: "1rem" }}>Next patient</h4>
-            <NextPatient />
+            <h4 style={{ marginBottom: "1rem" }}>Next patient Summary</h4>
+            <NextPatient
+              name={"Dell Jackson"}
+              info="Male - 28 Years 03 Months"
+            />
           </div>
           <div></div>
         </div>

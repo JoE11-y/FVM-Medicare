@@ -9,9 +9,6 @@
   margin-top: 2rem;
 }
 
-.patient-appointement-list {
-}
-
 .appointment-card {
   display: flex;
   align-items: center;
@@ -20,14 +17,15 @@
   border-radius: 10px;
   /* max-width: 20rem; */
   margin-bottom: 0.2rem;
-  transition: 0.3s;
+  transition: 0.2s;
   cursor: pointer;
   background-color: var(--light);
   position: relative;
 }
 
 .appointment-card:hover {
-  background-color: #fff;
+  background-color: rgba(241, 237, 237, 0.678);
+  box-shadow: 1px 1px 5px rgba(56, 56, 56, 0.2);
 }
 
 .appointment-img img {
@@ -64,4 +62,37 @@
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
+}
+
+.next-patient {
+  border: 1px solid rgba(226, 222, 222, 0.678);
+  padding: 0.5rem 1rem 1.5rem;
+  border-radius: 10px;
+}
+
+.symptoms {
+  /* margin: 0.8rem 0; */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid rgba(238, 234, 234, 0.678);
+  padding: 1rem 0;
+}
+
+.symptom_color {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 100%;
+}
+
+.symptom {
+  text-transform: capitalize;
+  padding-top: 0.8rem;
+}
+
+.previous-action {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-gap: 1rem;
+  margin-top: 1rem;
+  line-height: 1.3rem;
 }
