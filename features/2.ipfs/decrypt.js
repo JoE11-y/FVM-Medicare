@@ -25,30 +25,34 @@ const sign_auth_message = async (publicKey, privateKey) => {
 };
 
 const decrypt = async () => {
-  const cid = "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM";
-  const publicKey = "0xf3a7050c41c7C8e06Ec82FCAffBE62bfE8D84D96";
-  const privateKey = process.env.PRIVATE_KEY;
+  try {
+    const cid = "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM";
+    const publicKey = "0xc9aA0cF0d639b8DA98B3B78a7095544BE5781Ed0";
+    const privateKey = process.env.PRIVATE_KEY_2;
 
-  // Get file encryption key
-  const signed_message = await sign_auth_message(publicKey, privateKey);
-  const fileEncryptionKey = await lighthouse.fetchEncryptionKey(
-    cid,
-    publicKey,
-    signed_message
-  );
+    // Get file encryption key
+    const signed_message = await sign_auth_message(publicKey, privateKey);
+    const fileEncryptionKey = await lighthouse.fetchEncryptionKey(
+      cid,
+      publicKey,
+      signed_message
+    );
 
-  // Decrypt File
-  const decrypted = await lighthouse.decryptFile(
-    cid,
-    fileEncryptionKey.data.key
-  );
+    // Decrypt File
+    const decrypted = await lighthouse.decryptFile(
+      cid,
+      fileEncryptionKey.data.key
+    );
 
-  // Save File
-  var b64 = Buffer.from(decrypted);
+    // Save File
+    var b64 = Buffer.from(decrypted);
 
-  const jsonFile = b64_to_json(b64.toString());
+    const jsonFile = b64_to_json(b64.toString());
 
-  console.log(jsonFile);
+    console.log(jsonFile);
+  } catch (e) {
+    console.log(e.message);
+  }
 };
 
 decrypt();
