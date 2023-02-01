@@ -16,6 +16,7 @@ export const DoctorPendingAppointment = () => {
           border={key !== 0 && "none"}
           appointmentStatus={false}
           cursor="text"
+          message="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod."
         />
       ))}
     </div>

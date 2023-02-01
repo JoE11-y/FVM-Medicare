@@ -24,6 +24,7 @@ export const AcceptAppointment = ({ name, image, msg }) => {
         open={open}
         handleClose={handleClose}
         heading="Accept Appointment"
+        toDecline={false}
       />
     </>
   )

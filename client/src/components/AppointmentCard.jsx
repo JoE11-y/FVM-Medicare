@@ -12,6 +12,7 @@ export const AppointmentCard = ({
   appointmentStatus,
   cursor,
   index,
+  message,
 }) => {
   const { dispatch } = useContext(patientSummaryContext)
   return (
@@ -33,8 +34,8 @@ export const AppointmentCard = ({
         <div className="appointment-time">{time}</div>
       ) : (
         <div className="appointment-time">
-          <AcceptAppointment name={name} image={image} />
-          <DeclineAppointment name={name} image={image} />
+          <AcceptAppointment name={name} image={image} msg={message} />
+          <DeclineAppointment name={name} image={image} msg={message} />
         </div>
       )}
     </div>
