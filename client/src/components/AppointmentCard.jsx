@@ -33,8 +33,8 @@ export const AppointmentCard = ({
         <div className="appointment-time">{time}</div>
       ) : (
         <div className="appointment-time">
-          <AcceptAppointment />
-          <DeclineAppointment />
+          <AcceptAppointment name={name} image={image} />
+          <DeclineAppointment name={name} image={image} />
         </div>
       )}
     </div>

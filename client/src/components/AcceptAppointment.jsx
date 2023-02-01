@@ -1,14 +1,30 @@
 import React from "react"
-import { Icon } from "@mui/material"
+import { Icon, Button } from "@mui/material"
 import CheckIcon from "@mui/icons-material/Check"
+import { AppointmentModal } from "./AppointmentModal"
 
-export const AcceptAppointment = () => {
+export const AcceptAppointment = ({ name, image, msg }) => {
+  const [open, setOpen] = React.useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
   return (
-    <Icon
-      component={CheckIcon}
-      color="success"
-      fontSize="small"
-      cursor={"pointer"}
-    />
+    <>
+      <Button onClick={handleOpen} size="small">
+        <Icon
+          component={CheckIcon}
+          color="success"
+          fontSize="small"
+          cursor={"pointer"}
+        />
+      </Button>
+      <AppointmentModal
+        name={name}
+        image={image}
+        msg={msg}
+        open={open}
+        handleClose={handleClose}
+        heading="Accept Appointment"
+      />
+    </>
   )
 }
