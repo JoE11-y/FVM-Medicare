@@ -4,8 +4,9 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "./IFVMMedicareNFT.sol";
 
-contract FVMMedicareNFT is ERC721URIStorage {
+contract FVMMedicareNFT is ERC721URIStorage, IFVMMedicareNFT {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
@@ -16,24 +17,29 @@ contract FVMMedicareNFT is ERC721URIStorage {
         _tokenIdCounter.increment();
     }
 
-    function createData(address addr, string calldata uri) public {
+    function createData(address addr, string calldata uri) external returns (uint256) {
         require(balanceOf(addr) == 0, "you already have a minted NFT");
         uint256 tokenId = _tokenIdCounter.current();
         _safeMint(addr, tokenId);
         _setTokenURI(tokenId, uri);
         tokenIdPointer[addr] = tokenId;
         _tokenIdCounter.increment();
+        return tokenId;
+    }
+
+    function isTokenHolder(address addr) external view returns (bool) {
+        return balanceOf(addr) == 1;
     }
 
     function totalSupply() public view returns (uint256) {
         return _tokenIdCounter.current() - 1;
     }
 
-    function getTokenId(address addr) public view returns (uint256) {
+    function getTokenId(address addr) external view returns (uint256) {
         return tokenIdPointer[addr];
     }
 
-    function deleteData(uint256 tokenId) public {
+    function deleteData(uint256 tokenId) external {
         require(_isApprovedOrOwner(_msgSender(), tokenId), "not token owner or approved");
         _burn(tokenId);
     }
@@ -48,12 +54,9 @@ contract FVMMedicareNFT is ERC721URIStorage {
         super._beforeTokenTransfer(from, to, tokenId, batchSize);
     }
 
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721URIStorage)
-        returns (string memory)
-    {
+    function tokenURI(
+        uint256 tokenId
+    ) public view override(ERC721URIStorage) returns (string memory) {
         return super.tokenURI(tokenId);
     }
 
