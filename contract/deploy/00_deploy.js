@@ -4,7 +4,6 @@ require("hardhat-deploy-ethers")
 const ethers = require("ethers")
 const util = require("util")
 const request = util.promisify(require("request"))
-const { networkConfig } = require("../helper-hardhat-config")
 
 const DEPLOYER_PRIVATE_KEY = network.config.accounts[0]
 
@@ -33,46 +32,47 @@ module.exports = async ({ deployments }) => {
     const { deploy } = deployments
 
     const priorityFee = await callRpc("eth_maxPriorityFeePerGas")
-    
+
     // Wraps Hardhat's deploy, logging errors to console.
     const deployLogError = async (title, obj) => {
-        let ret;
+        let ret
         try {
-            ret = await deploy(title, obj);
+            ret = await deploy(title, obj)
         } catch (error) {
             console.log(error.toString())
             process.exit(1)
         }
-        return ret;
+        return ret
     }
 
     console.log("Wallet Ethereum Address:", deployer.address)
-    const chainId = network.config.chainId
-    const tokenToBeMinted = networkConfig[chainId]["tokenToBeMinted"]
 
-
-    await deployLogError("SimpleCoin", {
+    await deployLogError("FVMMedicareNFT", {
         from: deployer.address,
-        args: [tokenToBeMinted],
+        args: ["FVMPatientNFT", "FPT"],
         // maxPriorityFeePerGas to instruct hardhat to use EIP-1559 tx format
         maxPriorityFeePerGas: priorityFee,
         log: true,
     })
 
-    await deployLogError("FilecoinMarketConsumer", {
+    await deployLogError("FVMMedicareNFT", {
         from: deployer.address,
-        args: [],
+        args: ["FVMDoctorNFT", "FDT"],
         // maxPriorityFeePerGas to instruct hardhat to use EIP-1559 tx format
         maxPriorityFeePerGas: priorityFee,
         log: true,
     })
 
-    await deployLogError("DealRewarder", {
-        from: deployer.address,
-        args: [],
-        // maxPriorityFeePerGas to instruct hardhat to use EIP-1559 tx format
-        maxPriorityFeePerGas: priorityFee,
-        log: true,
-    })
+    // Uncomment this after getting the respective nfts
+
+    // await deployLogError("FVMMedicare", {
+    //     from: deployer.address,
+    //     args: [
+    //         "0xf090Ea8Cc0ca5b02c7F902d9ef54DaBe823489A2",
+    //         "0x57dFf7D779737Ec010D3627A72d9AABe6A0dedaC",
+    //     ],
+    //     // maxPriorityFeePerGas to instruct hardhat to use EIP-1559 tx format
+    //     maxPriorityFeePerGas: priorityFee,
+    //     log: true,
+    // })
 }
-
