@@ -64,7 +64,7 @@
   transform: translateY(-50%);
 }
 
-.next-patient {
+.patient-summary {
   border: 1px solid rgba(226, 222, 222, 0.678);
   padding: 0.5rem 1rem 1.5rem;
   border-radius: 10px;
@@ -95,4 +95,8 @@
   grid-gap: 1rem;
   margin-top: 1rem;
   line-height: 1.3rem;
+}
+
+.pending-appointments .appointment-time {
+  background-color: #fff;
 }

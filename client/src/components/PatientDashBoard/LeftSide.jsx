@@ -19,7 +19,7 @@ export const LeftSide = () => {
         </div>
         <div className="find-patient">
           <div className="blur">
-            <small>Schedule a call</small>
+            <small>Schedule a meeting</small>
             <div className="dash-blur_icon">
               {/* <span>+</span> */}
               <Icon component={AddIcCallIcon} fontSize="small" />
