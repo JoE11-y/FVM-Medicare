@@ -123,3 +123,79 @@
 .status-box h3 {
   font-size: 2rem;
 }
+
+.medical-records {
+  margin: 1.5rem 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1rem;
+}
+
+.medical-record_card {
+  padding-top: 1.5rem;
+  border: 1px solid rgba(175, 175, 175, 0.548);
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(25px);
+  height: 18rem;
+  overflow: hidden;
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.medical-record_card:hover {
+  height: 23rem;
+}
+
+.medical-record_card::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  background-color: rgba(225, 241, 241, 0.274);
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 80%;
+}
+
+.medical-record_card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background-color: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(25px);
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.medical-record_card h4 {
+  border-left: 2px solid var(--blue);
+  padding: 0.5rem 1.5rem;
+}
+
+.medical-records .record-item_preview {
+  padding: 0.5rem;
+  margin: 0.5rem;
+  background-color: rgba(216, 215, 215, 0.24);
+  font-weight: 500;
+}
+
+.medical-record_card-timeline {
+  text-align: center;
+  margin: 1rem 0;
+  display: flex;
+  padding: 0.5rem;
+}
+
+.medical-record_card-timeline p {
+  opacity: 0.6;
+  font-weight: 500;
+}
+
+.medical-record_card-timeline small {
+  font-weight: 600;
+}
+
+@import url(../css/doctorDashboard.css);
