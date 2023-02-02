@@ -14,3 +14,5 @@
   box-sizing: border-box;
   font-family: "Quicksand", Arial, Helvetica, sans-serif;
 }
+
+@import url(./choose-user.css);
