@@ -2,11 +2,12 @@ import { useEffect } from "react";
 
 import { huddleIframeApp, HuddleIframe } from "@huddle01/huddle01-iframe";
 
-export const HuddleCall = (meetId) => {
+export const HuddleCall = ({ meetId }) => {
   const iframeConfig = {
     roomUrl: `https://iframe.huddle01.com/${meetId}`,
     height: "600px",
     width: "80%",
+    border: false,
   };
 
   useEffect(() => {
