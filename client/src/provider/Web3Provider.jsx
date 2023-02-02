@@ -10,6 +10,35 @@ import { Web3Modal } from "@web3modal/react";
 
 const projectId = process.env.REACT_APP_WC_PROJECT_ID;
 
+// const hyperspace = {
+//   id: 3141,
+//   name: "Filecoin Hyperspace",
+//   network: "filecoin-hyperspace",
+//   nativeCurrency: {
+//     decimals: 18,
+//     name: "testnet filecoin",
+//     symbol: "tFIL",
+//   },
+//   rpcUrls: {
+//     default: {
+//       http: ["https://filecoin-hyperspace.chainstacklabs.com/rpc/v1"],
+//     },
+//     public: {
+//       http: ["https://filecoin-hyperspace.chainstacklabs.com/rpc/v1"],
+//     },
+//   },
+//   blockExplorers: {
+//     default: {
+//       name: "Filfox",
+//       url: "https://hyperspace.filfox.info/en",
+//     },
+//     gilf: {
+//       name: "Glif",
+//       url: "https://explorer.glif.io/?network=hyperspace",
+//     },
+//   },
+// };
+
 const { chains, provider } = configureChains(
   [filecoinHyperspace],
   [walletConnectProvider({ projectId: projectId })]
