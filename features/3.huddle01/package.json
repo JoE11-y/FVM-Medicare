@@ -1,0 +1,9 @@
+{
+  "name": "3.huddle01",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@huddle01/huddle01-client": "^0.0.10"
+  }
+}
