@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { Button, Icon } from "@mui/material";
-import VideoCallIcon from "@mui/icons-material/VideoCall";
-import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
-import { HuddleCall } from "./HuddleCall";
+import React, { useState } from "react"
+import { Button, Icon } from "@mui/material"
+import VideoCallIcon from "@mui/icons-material/VideoCall"
+import CancelPresentationIcon from "@mui/icons-material/CancelPresentation"
+import { HuddleCall } from "./HuddleCall"
 
 export const VideoCall = ({ isTime }) => {
-  const [show, setShow] = useState(false);
-  console.log(show);
+  const [show, setShow] = useState(false)
+  console.log(show)
   return (
     <>
       <Button
@@ -42,7 +42,38 @@ export const VideoCall = ({ isTime }) => {
         )}
       </Button>
 
-      {show ? <HuddleCall meetId={"tyre"} /> : <></>}
+      {show ? (
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            width: "100%",
+            zIndex: 5,
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "#fff",
+            padding: "1rem",
+          }}
+        >
+          <HuddleCall meetId={"tyre"} />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Button
+              startIcon={<CancelPresentationIcon />}
+              color="error"
+              onClick={() => setShow(!show)}
+            >
+              End Call
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
     </>
-  );
-};
+  )
+}
