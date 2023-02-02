@@ -15,7 +15,7 @@ export const DesktopNav = ({ style }) => {
         </Link>
       </li>
       <li>
-        <Link to={"/patient-dashboard"} style={style}>
+        <Link to={"/doctor-dashboard"} style={style}>
           about
         </Link>
       </li>

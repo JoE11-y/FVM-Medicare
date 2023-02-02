@@ -1,5 +1,6 @@
 import React from "react"
 import { MedicalRecordCard } from "../MedicalRecordCard"
+import { records } from "../../dummyData"
 
 export const RightSide = () => {
   return (
@@ -9,9 +10,9 @@ export const RightSide = () => {
         <small>This section contains all your medical records.</small>
 
         <div className="medical-records">
-          <MedicalRecordCard />
-          <MedicalRecordCard />
-          <MedicalRecordCard />
+          {records.map((record) => (
+            <MedicalRecordCard {...record} />
+          ))}
         </div>
       </div>
     </div>

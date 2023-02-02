@@ -1,13 +1,10 @@
-import React from "react"
-import doctor from "../images/doctor.jpg"
+import React, { useContext } from "react"
+import { VideoCall } from "./VideoCall"
+import { patientSummaryContext } from "../context"
 
 export const PatientSummary = ({ name, info }) => {
-  const data = [
-    { color: "#ff86ff", symptom: "fever" },
-    { color: "var(--blue)", symptom: "chest pain" },
-    { color: "var(--mindaro)", symptom: "infection" },
-    { color: "#86ffa4", symptom: "dry eyes" },
-  ]
+  const colors = ["#ff86ff", "var(--blue)", "var(--mindaro)", "#86ffa4"]
+  const { state } = useContext(patientSummaryContext)
   return (
     <div>
       <h4 style={{ marginBottom: "1rem" }}>Patient Summary</h4>
@@ -23,10 +20,10 @@ export const PatientSummary = ({ name, info }) => {
             className="appointment-img"
             style={{ border: "none", width: "3.6rem", height: "3.6rem" }}
           >
-            <img src={doctor} alt="patient icon" />
+            <img src={state.image} alt="patient icon" />
           </div>
           <div className="patient-name">
-            <p>{name}</p>
+            <p>{state.name}</p>
             <small style={{ opacity: 0.5, fontWeight: "bold" }}>{info}</small>
           </div>
           <small
@@ -37,11 +34,11 @@ export const PatientSummary = ({ name, info }) => {
         </div>
 
         <div className="symptoms">
-          {data.map(({ color, symptom }, key) => (
+          {state.symptoms.map((symptom, key) => (
             <div key={key}>
               <div
                 className="symptom_color"
-                style={{ backgroundColor: color }}
+                style={{ backgroundColor: colors[key] }}
               ></div>
               <small className="symptom">{symptom}</small>
             </div>
@@ -63,6 +60,8 @@ export const PatientSummary = ({ name, info }) => {
             </small>
           </div>
         </div>
+
+        <VideoCall isTime={true} />
       </div>
     </div>
   )
