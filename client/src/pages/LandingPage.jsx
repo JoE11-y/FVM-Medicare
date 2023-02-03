@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAccount, useProvider, useSigner, useSignTypedData } from "wagmi";
+import { useAccount, useProvider } from "wagmi";
 import { useDoctorNFTContract, usePatientNFTContract } from "../hooks";
 import "../css/landingPage.css";
 import image from "../images/landing2.jpg";
@@ -10,6 +10,7 @@ import { ConnectWallet } from "../components/ConnectWallet";
 import { NavBarIcon } from "../components/NavBarIcon";
 import { Logo } from "../components/Logo";
 import { DesktopNav } from "../components/DesktopNav";
+import { Button } from "@mui/material";
 
 const container = {
   hidden: { opacity: 1, scale: 0.5 },
@@ -34,8 +35,8 @@ const item = {
 export const LandingPage = () => {
   const navigate = useNavigate();
   const provider = useProvider();
+
   const { isConnected, address } = useAccount();
-  const { data: signer, isFetched } = useSigner();
 
   const doctorNFTContract = useDoctorNFTContract(provider);
   const patientNFTContract = usePatientNFTContract(provider);
@@ -85,6 +86,9 @@ export const LandingPage = () => {
               atque exercitationem, nesciunt iste asperiores aliquam quis. Sunt,
               vel excepturi.
             </p>
+            <Button variant="contained" sx={{ marginTop: "1rem" }}>
+              Get Started
+            </Button>
           </motion.div>
           <motion.div className="landingBody__right" variants={container}>
             <img src={image} alt="" />

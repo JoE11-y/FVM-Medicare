@@ -11,7 +11,7 @@ export const ChooseUser = () => {
     <div style={{ backgroundColor: "#e0e0e0", minHeight: "100vh" }}>
       <header className="landingHeader">
         <div style={{ display: "flex", alignItems: "center" }}>
-          <Logo colorTop={"#272F3F"} colorBottom={"#272F3F"} />
+          <Logo colorTop={"#272F3F"} colorBottom={"var(--blue)"} />
           <DesktopNav style={{ borderColor: "#272F3F", color: "#272F3F" }} />
         </div>
       </header>
@@ -25,11 +25,15 @@ export const ChooseUser = () => {
           className="doctor-patient"
           style={{ color: "var(--gunmetal)" }}
         >
-          <Icon component={AccountCircleIcon} fontSize="large" />
+          <Icon
+            component={AccountCircleIcon}
+            fontSize="large"
+            color="primary"
+          />
           <p>As Patient</p>
         </Link>
         <Link to={"doctor-form"} className="doctor-patient">
-          <Icon component={MedicationIcon} fontSize="large" />
+          <Icon component={MedicationIcon} fontSize="large" color="error" />
           <p>As Doctor</p>
         </Link>
       </section>
