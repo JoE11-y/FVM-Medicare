@@ -21,7 +21,7 @@ export const ChooseUser = () => {
       </p>
       <section className="choose-user">
         <Link
-          to={"patient-form"}
+          to={"/patient-form"}
           className="doctor-patient"
           style={{ color: "var(--gunmetal)" }}
         >
@@ -32,7 +32,7 @@ export const ChooseUser = () => {
           />
           <p>As Patient</p>
         </Link>
-        <Link to={"doctor-form"} className="doctor-patient">
+        <Link to={"/doctor-form"} className="doctor-patient">
           <Icon component={MedicationIcon} fontSize="large" color="error" />
           <p>As Doctor</p>
         </Link>
