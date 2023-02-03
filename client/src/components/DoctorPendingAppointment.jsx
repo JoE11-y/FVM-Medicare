@@ -1,8 +1,8 @@
-import React from "react"
-import { AppointmentCard } from "./AppointmentCard"
-import { patients } from "../dummyData"
+import React from "react";
+import { AppointmentCard } from "./AppointmentCard";
+import { patients } from "../dummyData";
 
-export const DoctorPendingAppointment = () => {
+export const DoctorPendingAppointment = ({ pendingAppointment }) => {
   return (
     <div className="pending-appointments">
       <h4 style={{ marginBottom: "1rem" }}>Pending Patients Request</h4>
@@ -20,5 +20,5 @@ export const DoctorPendingAppointment = () => {
         />
       ))}
     </div>
-  )
-}
+  );
+};

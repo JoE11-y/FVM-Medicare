@@ -1,10 +1,10 @@
-import React from "react"
-import "../css/dashboard.css"
-import { Logo } from "../components/Logo"
-import { DesktopNav } from "../components/DesktopNav"
-import { UserIcon } from "../components/UserIcon"
-import { LeftSide } from "../components/PatientDashBoard/LeftSide"
-import { RightSide } from "../components/PatientDashBoard/RightSide"
+import React from "react";
+import "../css/dashboard.css";
+import { Logo } from "../components/Logo";
+import { DesktopNav } from "../components/DesktopNav";
+import { UserIcon } from "../components/UserIcon";
+import { LeftSide } from "../components/PatientDashBoard/LeftSide";
+import { RightSide } from "../components/PatientDashBoard/RightSide";
 
 export const PatientDashboard = () => {
   return (
@@ -23,5 +23,5 @@ export const PatientDashboard = () => {
       </div>
       <div className="dashboard-content"></div>
     </div>
-  )
-}
+  );
+};

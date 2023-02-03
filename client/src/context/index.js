@@ -1,25 +1,33 @@
-import { createContext, useReducer } from "react"
-import { patients } from "../dummyData"
+import { createContext, useReducer } from "react";
 
-export const patientSummaryContext = createContext()
+export const appointmentSummaryContext = createContext();
 
-const initialState = patients[0]
+const initialState = { appointment: {}, appointments: [] };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "SET_PATIENT":
-      return patients[action.payload]
+    case "SET_CURR_APPOINTMENT":
+      return {
+        ...state,
+        appointment: state.appointments[action.payload],
+      };
+    case "SET_APPOINTMENTS":
+      return {
+        ...state,
+        appointment: action.payload[0],
+        appointments: action.payload,
+      };
     default:
-      return state
+      return state;
   }
-}
+};
 
-export const PatientSummaryProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState)
+export const AppointmentSummaryProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <patientSummaryContext.Provider value={{ state, dispatch }}>
+    <appointmentSummaryContext.Provider value={{ state, dispatch }}>
       {children}
-    </patientSummaryContext.Provider>
-  )
-}
+    </appointmentSummaryContext.Provider>
+  );
+};

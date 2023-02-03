@@ -1,5 +1,6 @@
 const PushAPI = require("@pushprotocol/restapi");
 const ethers = require("ethers");
+const uuid = require("uuid");
 require("dotenv").config({ path: "../.env" });
 
 const PK = process.env.PRIVATE_KEY; // channel private key
@@ -7,18 +8,20 @@ const Pkey = `0x${PK}`;
 const signer = new ethers.Wallet(Pkey);
 
 const sendNotification = async () => {
+  const uniquekey = uuid.v4();
+  console.log(uniquekey);
   try {
     const apiResponse = await PushAPI.payloads.sendNotification({
       signer,
       type: 3, // target
       identityType: 2, // direct payload
       notification: {
-        title: `[SDK-TEST] notification TITLE:`,
-        body: `[sdk-test] notification BODY`,
+        title: `New Data Request`,
+        body: `From 0x7e75f43853FA26f590D2f351C3C2B100E4FC329f`,
       },
       payload: {
-        title: `[sdk-test] payload title`,
-        body: `sample msg body`,
+        title: `Message ${uniquekey}`,
+        body: `I love you so much`,
         cta: "",
         img: "",
       },
@@ -28,9 +31,9 @@ const sendNotification = async () => {
     });
 
     // apiResponse?.status === 204, if sent successfully!
-    console.log("API repsonse: ", apiResponse);
+    console.log("API repsonse: ", apiResponse.status);
   } catch (err) {
-    console.error("Error: ", err);
+    console.error("Error: ", err.message);
   }
 };
 

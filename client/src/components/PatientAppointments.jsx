@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { PatientRequestsModal } from "./PatientRequestsModal";
+import { PatientsAppointmentsModal } from "./PatientsAppointmentsModal";
 
-export const PatientRequests = ({ title, index, count, type, onClick }) => {
+export const PatientAppointments = ({ title, index, count, type, onClick }) => {
   const [active, setActive] = useState(false);
 
   return (
@@ -20,7 +20,7 @@ export const PatientRequests = ({ title, index, count, type, onClick }) => {
         </div>
         <div className="count">+{count}</div>
       </div>
-      <PatientRequestsModal
+      <PatientsAppointmentsModal
         handleClose={() => setActive(!active)}
         open={active}
         type={type}

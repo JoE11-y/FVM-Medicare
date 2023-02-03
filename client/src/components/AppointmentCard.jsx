@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { AcceptAppointment } from "./AcceptAppointment";
 import { DeclineAppointment } from "./DeclineAppointment";
-import { patientSummaryContext } from "../context";
+import { appointmentSummaryContext } from "../context";
 
 export const AppointmentCard = ({
   image,
@@ -13,14 +13,17 @@ export const AppointmentCard = ({
   cursor,
   index,
   message,
+  appointmentId,
+  patientAddress,
 }) => {
-  const { dispatch } = useContext(patientSummaryContext);
+  const { dispatch } = useContext(appointmentSummaryContext);
   return (
     <div
       className="appointment-card"
       style={{ border, cursor }}
       onClick={() => {
-        appointmentStatus && dispatch({ type: "SET_PATIENT", payload: index });
+        appointmentStatus &&
+          dispatch({ type: "SET_CURR_APPOINTMENT", payload: index });
       }}
     >
       <div className="appointment-img">
@@ -34,8 +37,20 @@ export const AppointmentCard = ({
         <div className="appointment-time">{time}</div>
       ) : (
         <div className="appointment-time">
-          <AcceptAppointment name={name} image={image} msg={message} />
-          <DeclineAppointment name={name} image={image} msg={message} />
+          <AcceptAppointment
+            name={name}
+            image={image}
+            msg={message}
+            appointmentId={appointmentId}
+            patientAddress={patientAddress}
+          />
+          <DeclineAppointment
+            name={name}
+            image={image}
+            msg={message}
+            appointmentId={appointmentId}
+            patientAddress={patientAddress}
+          />
         </div>
       )}
     </div>

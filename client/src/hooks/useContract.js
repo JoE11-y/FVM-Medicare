@@ -1,4 +1,3 @@
-import react from "react";
 import { Contract } from "ethers";
 
 export const useContract = (abi, contractAddress, signerOrProvider) => {
