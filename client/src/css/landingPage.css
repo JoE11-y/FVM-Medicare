@@ -73,7 +73,7 @@
 
 .landingBody__right {
   width: 70%;
-  height: 28rem;
+  min-height: 28rem;
   position: relative;
 }
 .landingBody__right img {
@@ -118,7 +118,7 @@
 .fvm {
   position: absolute;
   left: 5rem;
-  bottom: 2rem;
+  bottom: 1rem;
   width: 36vmax;
 }
 .fvm img {

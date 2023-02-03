@@ -14,6 +14,7 @@ export const RequestList = ({ severity, title, data }) => {
           message={
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?"
           }
+          id={key}
         />
       ))}
     </div>

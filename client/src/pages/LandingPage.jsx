@@ -1,15 +1,16 @@
-import React, { useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAccount, useProvider } from "wagmi";
-import { useDoctorNFTContract, usePatientNFTContract } from "../hooks";
-import "../css/landingPage.css";
-import image from "../images/landing2.jpg";
-import fvm from "../images/fvm.jpg";
-import { motion } from "framer-motion";
-import { ConnectWallet } from "../components/ConnectWallet";
-import { NavBarIcon } from "../components/NavBarIcon";
-import { Logo } from "../components/Logo";
-import { DesktopNav } from "../components/DesktopNav";
+import React, { useEffect, useCallback } from "react"
+import { useNavigate } from "react-router-dom"
+import { useAccount, useProvider } from "wagmi"
+import { useDoctorNFTContract, usePatientNFTContract } from "../hooks"
+import "../css/landingPage.css"
+import image from "../images/landing2.jpg"
+import fvm from "../images/fvm.jpg"
+import { motion } from "framer-motion"
+import { ConnectWallet } from "../components/ConnectWallet"
+import { NavBarIcon } from "../components/NavBarIcon"
+import { Logo } from "../components/Logo"
+import { DesktopNav } from "../components/DesktopNav"
+import { Button } from "@mui/material"
 
 const container = {
   hidden: { opacity: 1, scale: 0.5 },
@@ -21,7 +22,7 @@ const container = {
       staggerChildren: 0.5,
     },
   },
-};
+}
 
 const item = {
   hidden: { y: 20, opacity: 0 },
@@ -29,36 +30,36 @@ const item = {
     y: 0,
     opacity: 1,
   },
-};
+}
 
 export const LandingPage = () => {
-  const navigate = useNavigate();
-  const provider = useProvider();
+  const navigate = useNavigate()
+  const provider = useProvider()
 
-  const { isConnected, address } = useAccount();
+  const { isConnected, address } = useAccount()
 
-  const doctorNFTContract = useDoctorNFTContract(provider);
-  const patientNFTContract = usePatientNFTContract(provider);
+  const doctorNFTContract = useDoctorNFTContract(provider)
+  const patientNFTContract = usePatientNFTContract(provider)
 
   const checkUser = useCallback(async () => {
-    const isDoctor = await doctorNFTContract.isTokenHolder(address);
+    const isDoctor = await doctorNFTContract.isTokenHolder(address)
 
-    const isPatient = await patientNFTContract.isTokenHolder(address);
+    const isPatient = await patientNFTContract.isTokenHolder(address)
 
     if (isDoctor) {
-      navigate("/doctor-dashboard");
+      navigate("/doctor-dashboard")
     } else if (isPatient) {
-      navigate("/patient-dashboard");
+      navigate("/patient-dashboard")
     } else {
-      navigate("/choose-user");
+      navigate("/choose-user")
     }
-  }, [address, navigate, doctorNFTContract, patientNFTContract]);
+  }, [address, navigate, doctorNFTContract, patientNFTContract])
 
   useEffect(() => {
     if (isConnected) {
       // checkUser();
     }
-  }, [isConnected, checkUser]);
+  }, [isConnected, checkUser])
   return (
     <motion.div className="landingPage">
       <motion.div
@@ -85,6 +86,9 @@ export const LandingPage = () => {
               atque exercitationem, nesciunt iste asperiores aliquam quis. Sunt,
               vel excepturi.
             </p>
+            <Button variant="contained" sx={{ marginTop: "1rem" }}>
+              Get Started
+            </Button>
           </motion.div>
           <motion.div className="landingBody__right" variants={container}>
             <img src={image} alt="" />
@@ -98,5 +102,5 @@ export const LandingPage = () => {
         </motion.div>
       </motion.div>
     </motion.div>
-  );
-};
+  )
+}

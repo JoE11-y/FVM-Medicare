@@ -1,5 +1,6 @@
 import { Alert, AlertTitle, Button } from "@mui/material"
 import React from "react"
+import { Link } from "react-router-dom"
 
 export const RequestCard = ({ img, name, message, id }) => {
   return (
@@ -36,9 +37,13 @@ export const RequestCard = ({ img, name, message, id }) => {
         </div>
 
         <div style={{ marginTop: "1rem" }}>
-          <Button color="success">Accept</Button>
-          <Button variant="contained" color="error">
-            Decline
+          <Button color="primary" variant="contained">
+            <Link
+              to={`/select-records/${id}`}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              Take Action
+            </Link>
           </Button>
         </div>
       </div>
