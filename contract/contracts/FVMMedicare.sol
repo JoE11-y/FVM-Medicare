@@ -21,21 +21,17 @@ contract FVMMedicare is Ownable {
         PATIENT
     }
 
-    struct AppointmentData {
-        string date;
-        string time;
-    }
-
     struct Appointment {
         uint256 appointmentId;
+        string uniqueKey;
         address patientAddress;
         address doctorAddress;
-        AppointmentData schedule;
         Status status;
     }
 
     struct Request {
         uint256 requestId;
+        string uniqueKey;
         address patientAddress;
         address doctorAddress;
         Status status;
@@ -108,7 +104,7 @@ contract FVMMedicare is Ownable {
         }
     }
 
-    function makeAppointment(address _doctorAddress, AppointmentData calldata _schedule) public {
+    function makeAppointment(address _doctorAddress, string memory _uniqueKey) public {
         require(
             IFVMMedicareNFT(patientMedicareNFTAddress).isTokenHolder(msg.sender),
             "Only Patients can access this"
@@ -126,9 +122,9 @@ contract FVMMedicare is Ownable {
 
         Appointment memory newAppointMent = Appointment({
             appointmentId: 0,
+            uniqueKey: _uniqueKey,
             patientAddress: msg.sender,
             doctorAddress: _doctorAddress,
-            schedule: _schedule,
             status: Status.PENDING
         });
 
@@ -175,7 +171,7 @@ contract FVMMedicare is Ownable {
         editedAppointmentPatient.status = _response;
     }
 
-    function createDataRequest(address _patientAddress) public {
+    function createDataRequest(address _patientAddress, string memory _uniqueKey) public {
         require(
             IFVMMedicareNFT(doctorMedicareNFTAddress).isTokenHolder(msg.sender),
             "Only doctors can access this"
@@ -193,6 +189,7 @@ contract FVMMedicare is Ownable {
 
         Request memory newRequest = Request({
             requestId: 0,
+            uniqueKey: _uniqueKey,
             patientAddress: _patientAddress,
             doctorAddress: msg.sender,
             status: Status.PENDING
