@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAccount, useProvider } from "wagmi";
+import { useAccount, useProvider, useSigner, useSignTypedData } from "wagmi";
 import { useDoctorNFTContract, usePatientNFTContract } from "../hooks";
 import "../css/landingPage.css";
 import image from "../images/landing2.jpg";
@@ -34,8 +34,8 @@ const item = {
 export const LandingPage = () => {
   const navigate = useNavigate();
   const provider = useProvider();
-
   const { isConnected, address } = useAccount();
+  const { data: signer, isFetched } = useSigner();
 
   const doctorNFTContract = useDoctorNFTContract(provider);
   const patientNFTContract = usePatientNFTContract(provider);
@@ -56,7 +56,7 @@ export const LandingPage = () => {
 
   useEffect(() => {
     if (isConnected) {
-      // checkUser();
+      //checkUser();
     }
   }, [isConnected, checkUser]);
   return (
