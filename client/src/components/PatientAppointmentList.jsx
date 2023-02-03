@@ -1,15 +1,15 @@
 import React from "react";
 import { Alert } from "@mui/material";
-import { RequestCard } from "./RequestCard";
+import { PatientAppointmentCard } from "./PatientAppointmentCard";
 
-export const RequestList = ({ severity, title, data }) => {
+export const PatientAppointmentList = ({ severity, title, data }) => {
   return (
     <div>
       <Alert severity={severity} style={{ textTransform: "capitalize" }}>
         {title}
       </Alert>
       {data.map(({ name, image }, key) => (
-        <RequestCard
+        <PatientAppointmentCard
           key={key}
           name={name}
           img={image}
