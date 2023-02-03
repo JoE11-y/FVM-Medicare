@@ -1,7 +1,7 @@
-import patient1 from "./images/patient1.jpg"
-import patient2 from "./images/patient2.jpg"
-import patient3 from "./images/patient3.jpg"
-import patient4 from "./images/patient4.jpg"
+import patient1 from "./images/patient1.jpg";
+import patient2 from "./images/patient2.jpg";
+import patient3 from "./images/patient3.jpg";
+import patient4 from "./images/patient4.jpg";
 
 export const patients = [
   {
@@ -10,6 +10,9 @@ export const patients = [
     time: "9.00am",
     symptoms: ["fever", "chest pain", "infection", "dizziness"],
     image: patient1,
+    appointmentId: "10",
+    patientAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
+    info: "Male - 28 Years 03 Months",
   },
   {
     name: "Sophia Moore",
@@ -17,6 +20,9 @@ export const patients = [
     time: "10.00am",
     symptoms: ["cough", "catarrh", "cold"],
     image: patient2,
+    appointmentId: "10",
+    patientAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
+    info: "Male - 28 Years 03 Months",
   },
   {
     name: "Campbell Deschamp",
@@ -24,6 +30,9 @@ export const patients = [
     time: "2.00pm",
     symptoms: ["fever", "chest pain", "infection", "dizziness"],
     image: patient3,
+    appointmentId: "10",
+    patientAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
+    info: "Male - 28 Years 03 Months",
   },
   {
     name: "Jesse pep",
@@ -31,10 +40,13 @@ export const patients = [
     time: "4.00pm",
     symptoms: ["fever", "chest pain", "infection", "dizziness"],
     image: patient4,
+    appointmentId: "10",
+    patientAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
+    info: "Male - 28 Years 03 Months",
   },
-]
+];
 
-export const doctors = []
+export const doctors = [];
 
 export const records = [
   {
@@ -73,4 +85,4 @@ export const records = [
     updated: "27.01.2023",
     created: "23.01.2020",
   },
-]
+];

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react";
 import {
   Alert,
   Typography,
@@ -8,12 +8,19 @@ import {
   TextField,
   Button,
   FormControl,
-} from "@mui/material"
+} from "@mui/material";
+import { useSigner } from "wagmi";
+import { respondToAppointment } from "../apis/FVMMedicare";
+import { sendMessage } from "../apis/PushProtocol";
+import { useFVMMedicareContract } from "../hooks";
+import { v4 } from "uuid";
 
 export const AppointmentModal = ({
   name,
   image,
   msg,
+  appointmentId,
+  patientAddress,
   open,
   handleClose,
   heading,
@@ -29,7 +36,40 @@ export const AppointmentModal = ({
     boxShadow: 24,
     p: 4,
     borderRadius: "10px",
-  }
+  };
+  const [message, setMessage] = useState("");
+
+  const { data: signer } = useSigner();
+
+  const contract = useFVMMedicareContract(signer);
+
+  const handleResponse = async () => {
+    if (!message) return;
+    let response;
+    const uniqueKey = v4();
+    if (toDecline) {
+      response = 2;
+    } else {
+      response = 1;
+    }
+    try {
+      const Txn = await respondToAppointment(
+        contract,
+        appointmentId,
+        response,
+        patientAddress,
+        uniqueKey
+      );
+      await Txn.wait();
+
+      await sendMessage(
+        signer.getAddress(),
+        message,
+        patientAddress,
+        uniqueKey
+      );
+    } catch (e) {}
+  };
   return (
     <Modal
       open={open}
@@ -70,6 +110,8 @@ export const AppointmentModal = ({
               label="Request Medical Records"
               required
               multiline
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               sx={{ marginTop: "1rem" }}
             />
             <Button
@@ -77,7 +119,8 @@ export const AppointmentModal = ({
               fullWidth
               sx={{ marginTop: "0.7rem" }}
               size="medium"
-              onSubmit={() => console.log("Request Medical Records")}
+              onClick={() => console.log(message)}
+              // onClick={() => handleResponse()}
             >
               Request Medical Records
             </Button>
@@ -88,11 +131,13 @@ export const AppointmentModal = ({
             color="error"
             fullWidth
             sx={{ marginTop: "1rem" }}
+            onClick={() => console.log(message)}
+            // onClick={() => handleResponse()}
           >
             Decline Appointment
           </Button>
         )}
       </Box>
     </Modal>
-  )
-}
+  );
+};

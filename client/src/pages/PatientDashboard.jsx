@@ -5,7 +5,6 @@ import { DesktopNav } from "../components/DesktopNav";
 import { UserIcon } from "../components/UserIcon";
 import { LeftSide } from "../components/PatientDashBoard/LeftSide";
 import { RightSide } from "../components/PatientDashBoard/RightSide";
-import { getRequest } from "../apis/FVMMedicare";
 
 export const PatientDashboard = () => {
   return (

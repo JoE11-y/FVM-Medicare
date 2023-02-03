@@ -6,60 +6,40 @@ import { UserIcon } from "../components/UserIcon";
 import { PatientSummary } from "../components/PatientSummary";
 import { AppointmentList } from "../components/AppointmentList";
 import { DoctorPendingAppointment } from "../components/DoctorPendingAppointment";
-import { PatientSummaryProvider } from "../context";
+import { AppointmentSummaryProvider } from "../context";
 import { useFVMMedicareContract } from "../hooks";
-import {
-  getAppointment,
-  getAppointmentCount,
-  getInformation,
-} from "../apis/FVMMedicare";
-import { getUserMessage } from "../apis/PushProtocol";
+import { getInformation, loadAppointments } from "../apis/FVMMedicare";
 
 export const DoctorDashboard = () => {
   const { address } = useAccount();
   const provider = useProvider();
   const [data, setData] = useState({});
-  const [appointments, setAppointments] = useState([]);
+  const [acceptedAppointments, setAcceptedAppointments] = useState([]);
   const [pendingAppointments, setPendingAppointments] = useState([]);
   const contract = useFVMMedicareContract(provider);
+
   const loadData = useCallback(async () => {
     const data = await getInformation(contract, address);
     setData(data);
   }, [address, contract]);
 
-  const loadAppointments = useCallback(async () => {
-    let appointments = [];
-    let pendingAppointments = [];
-    const appointmentCount = await getAppointmentCount(contract, address);
-
-    for (let i = 0; i < Number(appointmentCount); i++) {
-      const appointmentData = await getAppointment(address, i);
-      const message = await getUserMessage(
-        address,
-        appointmentData.patientAddress,
-        appointmentData.uniqueKey
-      );
-      let appointment = { ...appointmentData, message: message };
-      if (Number(appointment.status) === 0) {
-        pendingAppointments.push(appointment);
-      } else if (Number(appointment.status) === 1) {
-        appointments.push(appointment);
-      }
-    }
-
-    if (appointments) setAppointments(appointments);
-    if (pendingAppointments) setPendingAppointments(pendingAppointments);
+  const getAppointments = useCallback(async () => {
+    const appointments = await loadAppointments(contract, address);
+    if (appointments.acceptedappointments)
+      setAcceptedAppointments(appointments.rejectedAppointments);
+    if (appointments.pendingAppointments)
+      setPendingAppointments(appointments.pendingAppointments);
   }, [address, contract]);
 
   useEffect(() => {
     if (contract & !data) {
       loadData();
-      loadAppointments();
+      getAppointments();
     }
-  }, [contract, loadData, data, loadAppointments]);
+  }, [contract, loadData, data, getAppointments]);
 
   return (
-    <PatientSummaryProvider>
+    <AppointmentSummaryProvider>
       <div className="doctor-dashboard">
         <header className="landingHeader">
           <div style={{ display: "flex", alignItems: "center" }}>
@@ -72,7 +52,7 @@ export const DoctorDashboard = () => {
         <section style={{ padding: "1rem 2rem 2rem" }}>
           <div>
             <p>
-              Good Morning <b>Dr. {data.userSurname}</b>{" "}
+              Good Morning <b>Dr. {data.surname}</b>{" "}
             </p>
             <p>
               <small style={{ opacity: 0.5 }}>
@@ -81,15 +61,14 @@ export const DoctorDashboard = () => {
             </p>
           </div>
           <div className="doctor-view">
-            <AppointmentList />
-            <PatientSummary
-              name={"Dell Jackson"}
-              info="Male - 28 Years 03 Months"
+            <AppointmentList acceptedAppointments={acceptedAppointments} />
+            <PatientSummary />
+            <DoctorPendingAppointment
+              pendingAppointments={pendingAppointments}
             />
-            <DoctorPendingAppointment />
           </div>
         </section>
       </div>
-    </PatientSummaryProvider>
+    </AppointmentSummaryProvider>
   );
 };
