@@ -11,6 +11,7 @@ contract FVMMedicare is Ownable {
     address patientMedicareNFTAddress;
 
     enum Status {
+        NONE,
         PENDING,
         ACCEPTED,
         REJECTED
@@ -24,50 +25,36 @@ contract FVMMedicare is Ownable {
     struct Appointment {
         uint256 appointmentId;
         string uniqueKey;
+        uint256 appointmentType;
         address patientAddress;
         address doctorAddress;
-        Status status;
-    }
-
-    struct Request {
-        uint256 requestId;
-        string uniqueKey;
-        address patientAddress;
-        address doctorAddress;
-        Status status;
+        bool medicalRecordShared;
+        Status appointmentStatus;
+        Status requestStatus;
     }
 
     struct BioData {
-        string userName;
-        string userSurname;
-        string userBirthDate;
+        string name;
+        string surname;
+        string birthDate;
         string speciality;
+        string image;
     }
 
     struct Patient {
         address patientAddress;
-        string name;
-        string surname;
-        string birthDate;
-        string employment;
-        uint256 requestCount;
+        BioData patientBioData;
         uint256 appointmentCount;
-        mapping(uint256 => Request) patientRequests;
         mapping(uint256 => Appointment) patientAppointments;
         mapping(uint256 => uint256) doctorToPatientAppointmentMapping;
     }
 
     struct Doctor {
         address doctorAddress;
-        string name;
-        string surname;
-        string birthDate;
-        string speciality;
-        uint256 requestCount;
+        BioData doctorBioData;
         uint256 appointmentCount;
         mapping(uint256 => Appointment) doctorAppointments;
-        mapping(uint256 => Request) doctorRequests;
-        mapping(uint256 => uint256) patientToDoctorRequestMapping;
+        mapping(uint256 => uint256) patientToDoctorAppointmentMapping;
     }
 
     mapping(uint256 => Doctor) private Doctors;
@@ -87,9 +74,7 @@ contract FVMMedicare is Ownable {
 
             Doctor storage _doctor = Doctors[doctorId];
             _doctor.doctorAddress = msg.sender;
-            _doctor.name = _biodata.userName;
-            _doctor.birthDate = _biodata.userBirthDate;
-            _doctor.speciality = _biodata.speciality;
+            _doctor.doctorBioData = _biodata;
         } else if (user == Category.PATIENT) {
             uint256 patientId = IFVMMedicareNFT(patientMedicareNFTAddress).createData(
                 msg.sender,
@@ -98,13 +83,15 @@ contract FVMMedicare is Ownable {
 
             Patient storage _patient = Patients[patientId];
             _patient.patientAddress = msg.sender;
-            _patient.name = _biodata.userName;
-            _patient.birthDate = _biodata.userBirthDate;
-            _patient.employment = _biodata.speciality;
+            _patient.patientBioData = _biodata;
         }
     }
 
-    function makeAppointment(address _doctorAddress, string memory _uniqueKey) public {
+    function makeAppointment(
+        address _doctorAddress,
+        string memory _uniqueKey,
+        uint256 _appointmentType
+    ) public {
         require(
             IFVMMedicareNFT(patientMedicareNFTAddress).isTokenHolder(msg.sender),
             "Only Patients can access this"
@@ -123,9 +110,12 @@ contract FVMMedicare is Ownable {
         Appointment memory newAppointMent = Appointment({
             appointmentId: 0,
             uniqueKey: _uniqueKey,
+            appointmentType: _appointmentType,
             patientAddress: msg.sender,
             doctorAddress: _doctorAddress,
-            status: Status.PENDING
+            medicalRecordShared: false,
+            appointmentStatus: Status.PENDING,
+            requestStatus: Status.NONE
         });
 
         Patient storage _patient = Patients[patientTokenId];
@@ -140,24 +130,27 @@ contract FVMMedicare is Ownable {
 
         _patient.doctorToPatientAppointmentMapping[_doctor.appointmentCount] = _patient
             .appointmentCount;
+
+        _doctor.patientToDoctorAppointmentMapping[_patient.appointmentCount] = _doctor
+            .appointmentCount;
     }
 
     function respondToAppointment(uint256 _doctorAppointmentId, Status _response) public {
         require(
             IFVMMedicareNFT(doctorMedicareNFTAddress).isTokenHolder(msg.sender),
-            "Only doctors can access this"
+            "Address is not a doctor"
         );
 
         uint256 doctorTokenId = IFVMMedicareNFT(doctorMedicareNFTAddress).getTokenId(msg.sender);
 
-        Appointment storage editedAppointment = Doctors[doctorTokenId].doctorAppointments[
+        Appointment storage editedAppointmentDoctor = Doctors[doctorTokenId].doctorAppointments[
             _doctorAppointmentId
         ];
 
-        editedAppointment.status = _response;
+        editedAppointmentDoctor.appointmentStatus = _response;
 
         uint256 patientTokenId = IFVMMedicareNFT(patientMedicareNFTAddress).getTokenId(
-            editedAppointment.patientAddress
+            editedAppointmentDoctor.patientAddress
         );
 
         uint256 _patientAppointmentId = Patients[patientTokenId].doctorToPatientAppointmentMapping[
@@ -168,47 +161,15 @@ contract FVMMedicare is Ownable {
             _patientAppointmentId
         ];
 
-        editedAppointmentPatient.status = _response;
+        editedAppointmentPatient.appointmentStatus = _response;
+
+        if (_response == Status.ACCEPTED) {
+            editedAppointmentDoctor.requestStatus = Status.PENDING;
+            editedAppointmentPatient.requestStatus = Status.PENDING;
+        }
     }
 
-    function createDataRequest(address _patientAddress, string memory _uniqueKey) public {
-        require(
-            IFVMMedicareNFT(doctorMedicareNFTAddress).isTokenHolder(msg.sender),
-            "Only doctors can access this"
-        );
-        require(
-            IFVMMedicareNFT(patientMedicareNFTAddress).isTokenHolder(_patientAddress),
-            "Patient is not a doctor"
-        );
-
-        uint256 doctorTokenId = IFVMMedicareNFT(doctorMedicareNFTAddress).getTokenId(msg.sender);
-
-        uint256 patientTokenId = IFVMMedicareNFT(patientMedicareNFTAddress).getTokenId(
-            _patientAddress
-        );
-
-        Request memory newRequest = Request({
-            requestId: 0,
-            uniqueKey: _uniqueKey,
-            patientAddress: _patientAddress,
-            doctorAddress: msg.sender,
-            status: Status.PENDING
-        });
-
-        Doctor storage _doctor = Doctors[doctorTokenId];
-        _doctor.requestCount++;
-        newRequest.requestId = _doctor.requestCount;
-        _doctor.doctorRequests[_doctor.requestCount] = newRequest;
-
-        Patient storage _patient = Patients[patientTokenId];
-        _patient.requestCount++;
-        newRequest.requestId = _patient.requestCount;
-        _patient.patientRequests[_patient.requestCount] = newRequest;
-
-        _doctor.patientToDoctorRequestMapping[_patient.requestCount] = _doctor.requestCount;
-    }
-
-    function respondToDataRequest(uint256 _patientRequestId, Status _response) public {
+    function respondToDataRequest(uint256 _patientAppointmentId, bool giveAccess) public {
         require(
             IFVMMedicareNFT(patientMedicareNFTAddress).isTokenHolder(msg.sender),
             "Only patients can access this"
@@ -216,23 +177,33 @@ contract FVMMedicare is Ownable {
 
         uint256 patientTokenId = IFVMMedicareNFT(patientMedicareNFTAddress).getTokenId(msg.sender);
 
-        Request storage editedRequest = Patients[patientTokenId].patientRequests[_patientRequestId];
-
-        editedRequest.status = _response;
+        Appointment storage editedAppointmentPatient = Patients[patientTokenId].patientAppointments[
+            _patientAppointmentId
+        ];
 
         uint256 doctorTokenId = IFVMMedicareNFT(doctorMedicareNFTAddress).getTokenId(
-            editedRequest.doctorAddress
+            editedAppointmentPatient.doctorAddress
         );
 
-        uint256 _doctorRequestId = Doctors[doctorTokenId].patientToDoctorRequestMapping[
-            _patientRequestId
+        uint256 _doctorAppointmentId = Doctors[doctorTokenId].patientToDoctorAppointmentMapping[
+            _patientAppointmentId
         ];
 
-        Request storage editedRequestDoctor = Doctors[doctorTokenId].doctorRequests[
-            _doctorRequestId
+        Appointment storage editedAppointmentDoctor = Doctors[doctorTokenId].doctorAppointments[
+            _doctorAppointmentId
         ];
 
-        editedRequestDoctor.status = _response;
+        if (giveAccess) {
+            editedAppointmentPatient.requestStatus = Status.ACCEPTED;
+            editedAppointmentPatient.medicalRecordShared = true;
+            editedAppointmentDoctor.requestStatus = Status.ACCEPTED;
+            editedAppointmentDoctor.medicalRecordShared = true;
+        } else {
+            editedAppointmentPatient.requestStatus = Status.PENDING;
+            editedAppointmentPatient.medicalRecordShared = false;
+            editedAppointmentDoctor.requestStatus = Status.PENDING;
+            editedAppointmentDoctor.medicalRecordShared = false;
+        }
     }
 
     function getInformation(address _addr) public view returns (BioData memory) {
@@ -240,34 +211,12 @@ contract FVMMedicare is Ownable {
 
         if (IFVMMedicareNFT(patientMedicareNFTAddress).isTokenHolder(_addr)) {
             uint256 patientTokenId = IFVMMedicareNFT(patientMedicareNFTAddress).getTokenId(_addr);
-            _information = BioData({
-                userName: Patients[patientTokenId].name,
-                userSurname: Patients[patientTokenId].surname,
-                userBirthDate: Patients[patientTokenId].birthDate,
-                speciality: Patients[patientTokenId].employment
-            });
+            _information = Patients[patientTokenId].patientBioData;
         } else if (IFVMMedicareNFT(doctorMedicareNFTAddress).isTokenHolder(_addr)) {
             uint256 doctorTokenId = IFVMMedicareNFT(doctorMedicareNFTAddress).getTokenId(_addr);
-            _information = BioData({
-                userName: Doctors[doctorTokenId].name,
-                userSurname: Doctors[doctorTokenId].surname,
-                userBirthDate: Doctors[doctorTokenId].birthDate,
-                speciality: Doctors[doctorTokenId].speciality
-            });
+            _information = Doctors[doctorTokenId].doctorBioData;
         }
         return _information;
-    }
-
-    function getRequestCount(address _addr) public view returns (uint256) {
-        uint256 count;
-        if (IFVMMedicareNFT(patientMedicareNFTAddress).isTokenHolder(_addr)) {
-            uint256 patientTokenId = IFVMMedicareNFT(patientMedicareNFTAddress).getTokenId(_addr);
-            count = Patients[patientTokenId].requestCount;
-        } else if (IFVMMedicareNFT(doctorMedicareNFTAddress).isTokenHolder(_addr)) {
-            uint256 doctorTokenId = IFVMMedicareNFT(doctorMedicareNFTAddress).getTokenId(_addr);
-            count = Doctors[doctorTokenId].requestCount;
-        }
-        return count;
     }
 
     function getAppointmentCount(address _addr) public view returns (uint256) {
@@ -280,18 +229,6 @@ contract FVMMedicare is Ownable {
             count = Doctors[doctorTokenId].appointmentCount;
         }
         return count;
-    }
-
-    function getRequest(address _addr, uint256 _requestId) public view returns (Request memory) {
-        Request memory _request;
-        if (IFVMMedicareNFT(patientMedicareNFTAddress).isTokenHolder(_addr)) {
-            uint256 patientTokenId = IFVMMedicareNFT(patientMedicareNFTAddress).getTokenId(_addr);
-            _request = Patients[patientTokenId].patientRequests[_requestId];
-        } else if (IFVMMedicareNFT(doctorMedicareNFTAddress).isTokenHolder(_addr)) {
-            uint256 doctorTokenId = IFVMMedicareNFT(doctorMedicareNFTAddress).getTokenId(_addr);
-            _request = Doctors[doctorTokenId].doctorRequests[_requestId];
-        }
-        return _request;
     }
 
     function getAppointment(

@@ -17,16 +17,16 @@ const getNotifications = async (userAddress) => {
 
 const getUserMessage = async (userAddress, addressFrom, unique) => {
   const notifications = await getNotifications(userAddress);
-  console.log(notifications[0]);
+  // console.log(notifications[0]);
   let message = "";
   for (let i = 0; i < notifications.length; i++) {
     const currNotification = notifications[i];
     if (currNotification.app != "FVM Medicare") continue;
     const notificationTitle = currNotification.notification["body"];
-    const uniquekey = currNotification.title.slice(9);
+    const uniquekey = currNotification.title.slice(8);
     const address = notificationTitle.slice(5);
     if (
-      address.toLowerCase() != addressFrom.toLowerCase() &&
+      address.toLowerCase() != addressFrom.toLowerCase() ||
       uniquekey.toLowerCase() != unique.toLowerCase()
     )
       continue;
