@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react";
 import {
   Alert,
   AlertTitle,
@@ -6,16 +6,19 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
-} from "@mui/material"
-import img from "../images/doctor.jpg"
-import { useParams } from "react-router-dom"
-import { Logo } from "../components/Logo"
-import { DesktopNav } from "../components/DesktopNav"
-import { UserIcon } from "../components/UserIcon"
+} from "@mui/material";
+import img from "../images/doctor.jpg";
+import { useParams } from "react-router-dom";
+import { Logo } from "../components/Logo";
+import { DesktopNav } from "../components/DesktopNav";
+import { UserIcon } from "../components/UserIcon";
+import { requestSummaryContext } from "../context";
 
 export const SelectMedicalRecords = () => {
-  const { id } = useParams()
-  console.log(id)
+  const { state } = useContext(requestSummaryContext);
+  console.log(state);
+  const { id } = useParams();
+  console.log(id);
   // Fetch data from the backend with the URL param(id)
   return (
     <div>
@@ -127,5 +130,5 @@ export const SelectMedicalRecords = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

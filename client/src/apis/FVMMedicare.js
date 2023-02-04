@@ -5,29 +5,35 @@ export const register = async (contract, user, uri, biodata) => {
   await Txn.wait();
 };
 
-export const makeAppointment = async (contract, doctorAddress, uniqueKey) => {
-  const Txn = await contract.makeAppointment(doctorAddress, uniqueKey);
+export const makeAppointment = async (
+  contract,
+  doctorAddress,
+  uniqueKey,
+  appoinmentType
+) => {
+  const Txn = await contract.makeAppointment(
+    doctorAddress,
+    uniqueKey,
+    appoinmentType
+  );
   await Txn.wait();
 };
 
 export const respondToAppointment = async (
   contract,
   appointmentId,
-  response,
-  patientAddress,
-  uniqueKey = ""
+  response
 ) => {
-  const Txn = await contract.respondToAppointment(
-    appointmentId,
-    response,
-    patientAddress,
-    uniqueKey
-  );
+  const Txn = await contract.respondToAppointment(appointmentId, response);
   await Txn.wait();
 };
 
-export const respondToDataRequest = async (contract, requestId) => {
-  const Txn = await contract.respondToDataRequest(requestId);
+export const respondToDataRequest = async (
+  contract,
+  appointmentId,
+  giveAccess
+) => {
+  const Txn = await contract.respondToDataRequest(appointmentId, giveAccess);
   await Txn.wait();
 };
 
@@ -36,18 +42,8 @@ export const getInformation = async (contract, address) => {
   return data;
 };
 
-export const getRequestCount = async (contract, address) => {
-  const data = await contract.getRequestCount(address);
-  return data;
-};
-
 export const getAppointmentCount = async (contract, address) => {
   const data = await contract.getAppointmentCount(address);
-  return data;
-};
-
-export const getRequest = async (contract, address, requestId) => {
-  const data = await contract.getRequest(address, requestId);
   return data;
 };
 
@@ -64,31 +60,29 @@ export const loadAppointments = async (address, contract, isDoctor = true) => {
 
   for (let i = 0; i < Number(appointmentCount); i++) {
     const appointmentData = await getAppointment(contract, address, i);
-    const message = await getUserMessage(
-      address,
-      appointmentData.patientAddress,
-      appointmentData.uniqueKey
-    );
-
     let info;
-    let cid;
+    let message;
+
     if (isDoctor) {
       info = await getInformation(contract, appointmentData.patientInfo);
-      cid = await loadRequestCID(
-        contract,
+      message = await getUserMessage(
         address,
-        appointmentData.patientAddress
+        appointmentData.patientAddress,
+        appointmentData.uniqueKey
       );
     } else {
       info = await getInformation(contract, appointmentData.doctorAddress);
-      cid = "";
+      message = await getUserMessage(
+        address,
+        appointmentData.doctorAddress,
+        appointmentData.uniqueKey
+      );
     }
 
     let appointment = {
       ...appointmentData,
       ...info,
       message: message,
-      cid: cid,
     };
 
     if (Number(appointment.status) === 0) {
@@ -101,61 +95,4 @@ export const loadAppointments = async (address, contract, isDoctor = true) => {
   }
 
   return { acceptedappointments, pendingAppointments, rejectedAppointments };
-};
-
-const loadRequestCID = async (contract, address, patientAddress) => {
-  const requestCount = await getRequestCount(contract, address);
-
-  let message;
-
-  for (let i = 0; i < Number(requestCount); i++) {
-    const requestData = await getRequest(contract, address, i);
-
-    if (
-      requestData.patientAddress.toLowerCase() !== patientAddress.toLowerCase()
-    )
-      continue;
-
-    message = await getUserMessage(
-      address,
-      requestData.patientAddress,
-      requestData.uniqueKey
-    );
-  }
-  return message;
-};
-
-export const loadRequests = async (contract, address, isDoctor = false) => {
-  let acceptedRequests = [];
-  let pendingRequests = [];
-  let rejectedRequests = [];
-
-  const requestCount = await getRequestCount(contract, address);
-
-  for (let i = 0; i < Number(requestCount); i++) {
-    const requestData = await getRequest(contract, address, i);
-
-    const message = await getUserMessage(
-      address,
-      requestData.doctorAddress,
-      requestData.uniqueKey
-    );
-
-    let info;
-    if (isDoctor) {
-      info = await getInformation(contract, requestData.patientAddress);
-    } else {
-      info = await getInformation(contract, requestData.doctorAddress);
-    }
-
-    let request = { ...requestData, ...info, message: message };
-    if (Number(request.status) === 0) {
-      pendingRequests.push(request);
-    } else if (Number(request.status) === 1) {
-      acceptedRequests.push(request);
-    } else if (Number(request.status) === 2) {
-      rejectedRequests.push(request);
-    }
-  }
-  return { acceptedRequests, pendingRequests, rejectedRequests };
 };

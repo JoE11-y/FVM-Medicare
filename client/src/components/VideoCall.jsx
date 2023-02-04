@@ -4,7 +4,7 @@ import VideoCallIcon from "@mui/icons-material/VideoCall";
 import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
 import { HuddleCall } from "./HuddleCall";
 
-export const VideoCall = ({ appointmentKey }) => {
+export const VideoCall = ({ key }) => {
   const [show, setShow] = useState(false);
   console.log(show);
   return (
@@ -48,7 +48,7 @@ export const VideoCall = ({ appointmentKey }) => {
             padding: "1rem",
           }}
         >
-          <HuddleCall meetId={appointmentKey} />
+          <HuddleCall meetId={key} />
           <div
             style={{
               display: "flex",

@@ -3,56 +3,32 @@ import { AcceptAppointment } from "./AcceptAppointment";
 import { DeclineAppointment } from "./DeclineAppointment";
 import { appointmentSummaryContext } from "../context";
 
-export const AppointmentCard = ({
-  image,
-  name,
-  type,
-  time,
-  border,
-  appointmentStatus,
-  cursor,
-  index,
-  message,
-  appointmentId,
-  patientAddress,
-}) => {
+export const AppointmentCard = ({ appointment, border, cursor, index }) => {
   const { dispatch } = useContext(appointmentSummaryContext);
   return (
     <div
       className="appointment-card"
       style={{ border, cursor }}
       onClick={() => {
-        appointmentStatus &&
+        appointment.appointmentStatus == 2 &&
           dispatch({ type: "SET_CURR_APPOINTMENT", payload: index });
       }}
     >
       <div className="appointment-img">
-        <img src={image} alt="" srcSet="" />
+        <img src={appointment.image} alt="" srcSet="" />
       </div>
       <div className="patient-name">
-        <p>{name}</p>
-        <small style={{ opacity: 0.5 }}>{type}</small>
+        <p>{appointment.name}</p>
+        <small style={{ opacity: 0.5 }}>{appointment.appointmentType}</small>
       </div>
-      {appointmentStatus ? (
-        <div className="appointment-time">{time}</div>
-      ) : (
+      {appointment.appointmentStatus == 2 ? (
+        <div className="appointment-time">{appointment.appointmentType}</div>
+      ) : appointment.appointmentStatus == 1 ? (
         <div className="appointment-time">
-          <AcceptAppointment
-            name={name}
-            image={image}
-            msg={message}
-            appointmentId={appointmentId}
-            patientAddress={patientAddress}
-          />
-          <DeclineAppointment
-            name={name}
-            image={image}
-            msg={message}
-            appointmentId={appointmentId}
-            patientAddress={patientAddress}
-          />
+          <AcceptAppointment appointment={appointment} />
+          <DeclineAppointment appointment={appointment} />
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

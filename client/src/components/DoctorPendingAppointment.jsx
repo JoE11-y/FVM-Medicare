@@ -3,20 +3,17 @@ import { AppointmentCard } from "./AppointmentCard";
 import { patients } from "../dummyData";
 
 export const DoctorPendingAppointment = ({ pendingAppointment }) => {
+  const appointments = patients;
   return (
     <div className="pending-appointments">
       <h4 style={{ marginBottom: "1rem" }}>Pending Patients Request</h4>
-      {patients.map(({ name, type, time, image }, key) => (
+      {appointments.map((appointment, key) => (
         <AppointmentCard
-          name={name}
-          type={type}
-          time={time}
-          image={image}
+          appointment={appointment}
           key={key}
           border={key !== 0 && "none"}
           appointmentStatus={false}
           cursor="text"
-          message="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod."
         />
       ))}
     </div>

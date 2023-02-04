@@ -1,28 +1,28 @@
-import React, { useContext, useState } from "react"
-import { useSigner } from "wagmi"
-import { VideoCall } from "./VideoCall"
-import { appointmentSummaryContext } from "../context"
-import { downloadNDecryptData } from "../apis/Lighthouse"
-import { PatientRecords } from "./PatientRecords"
+import React, { useContext, useState } from "react";
+import { useSigner } from "wagmi";
+import { VideoCall } from "./VideoCall";
+import { appointmentSummaryContext } from "../context";
+import { downloadNDecryptData } from "../apis/Lighthouse";
+import { PatientRecords } from "./PatientRecords";
 
 export const PatientSummary = () => {
-  const colors = ["#ff86ff", "var(--blue)", "var(--mindaro)", "#86ffa4"]
-  const [open, setOpen] = useState(false)
+  const colors = ["#ff86ff", "var(--blue)", "var(--mindaro)", "#86ffa4"];
+  const [open, setOpen] = useState(false);
   const {
     state: { appointment },
-  } = useContext(appointmentSummaryContext)
+  } = useContext(appointmentSummaryContext);
 
-  const { data: signer, isFetched } = useSigner()
+  const { data: signer, isFetched } = useSigner();
 
-  const [patientData, setPatientData] = useState({})
+  const [patientData, setPatientData] = useState({});
 
   const getPatientRecord = async () => {
-    const cid = appointment?.cid
+    const cid = appointment?.cid;
     if (isFetched) {
-      const data = downloadNDecryptData(cid, signer)
-      setPatientData(data)
+      const data = downloadNDecryptData(cid, signer);
+      setPatientData(data);
     }
-  }
+  };
 
   //@frank
   //add button to view to display patient medical record on doctor view.
@@ -86,9 +86,9 @@ export const PatientSummary = () => {
           </div>
         </div>
 
-        <VideoCall appointmentKey={appointment?.uniqueKey} />
+        <VideoCall key={appointment?.requestKey} />
       </div>
       <PatientRecords open={open} handleClose={() => setOpen(!open)} />
     </div>
-  )
-}
+  );
+};

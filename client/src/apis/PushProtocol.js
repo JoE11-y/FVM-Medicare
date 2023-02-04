@@ -80,13 +80,13 @@ export const getUserMessage = async (
   let message = "";
   for (let i = 0; i < notifications.length; i++) {
     const currNotification = notifications[i];
-    if (currNotification.app != "FVM Medicare") continue;
+    if (currNotification.app !== "FVM Medicare") continue;
     const notificationTitle = currNotification.notification["body"];
     const uniquekey = currNotification.title.slice(9);
     const address = notificationTitle.slice(5);
     if (
-      address.toLowerCase() != addressFrom.toLowerCase() ||
-      uniquekey.toLowerCase() != msgUniqueKey.toLowerCase()
+      address.toLowerCase() !== addressFrom.toLowerCase() ||
+      uniquekey.toLowerCase() !== msgUniqueKey.toLowerCase()
     )
       continue;
     message = currNotification.message;

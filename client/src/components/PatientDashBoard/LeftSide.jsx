@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAccount, useProvider } from "wagmi";
 import { MeetADoctor } from "../MeetADoctor";
-import { PatientRequests } from "../PatientRequests";
 import { PatientAppointments } from "../PatientAppointments";
 import { useFVMMedicareContract } from "../../hooks";
 import {
@@ -9,6 +8,7 @@ import {
   loadRequests,
   getInformation,
 } from "../../apis/FVMMedicare";
+import { patients } from "../../dummyData";
 
 export const LeftSide = () => {
   const { address } = useAccount();
@@ -17,10 +17,6 @@ export const LeftSide = () => {
   const [acceptedAppointments, setAcceptedAppointments] = useState([]);
   const [pendingAppointments, setPendingAppointments] = useState([]);
   const [rejectedAppointments, setRejectedAppointments] = useState([]);
-  const [acceptedRequests, setAcceptedRequests] = useState([]);
-  const [pendingRequests, setPendingRequests] = useState([]);
-  const [rejectedRequests, setRejectedRequests] = useState([]);
-
   const contract = useFVMMedicareContract(provider);
 
   const loadData = useCallback(async () => {
@@ -29,7 +25,7 @@ export const LeftSide = () => {
   }, [address, contract]);
 
   const getAppointments = useCallback(async () => {
-    const appointments = await loadAppointments(contract, address);
+    const appointments = await loadAppointments(contract, address, false);
     if (appointments.acceptedappointments)
       setAcceptedAppointments(appointments.rejectedAppointments);
     if (appointments.pendingAppointments)
@@ -38,22 +34,12 @@ export const LeftSide = () => {
       setRejectedAppointments(appointments.rejectedAppointments);
   }, [address, contract]);
 
-  const getRequests = useCallback(async () => {
-    const requests = await loadRequests(contract, address);
-    if (requests.acceptedappointments)
-      setAcceptedRequests(requests.acceptedRequests);
-    if (requests.pendingAppointments)
-      setPendingRequests(requests.pendingAppointments);
-    if (requests.rejectedAppointments)
-      setRejectedRequests(requests.rejectedAppointments);
-  }, [address, contract]);
-
   useEffect(() => {
     if (contract & !data) {
       loadData();
       getAppointments();
     }
-  }, [contract, loadData, data]);
+  }, [contract, loadData, getAppointments, data]);
 
   return (
     <div className="dashboard_body-left">
@@ -65,43 +51,35 @@ export const LeftSide = () => {
         <MeetADoctor />
       </div>
       <div style={{ margin: "3.5rem 0" }}>
-        <h3 style={{ marginBottom: "1rem" }}>Requests and Call Appointments</h3>
+        <h3 style={{ marginBottom: "1rem" }}>Call Appointments</h3>
         <div className="status">
-          <PatientRequests
-            title={"accepted requests"}
-            count={7}
-            index={1}
-            type={"accepted"}
-          />
           <PatientAppointments
             title={"accepted appointments"}
-            count={18}
-            index={2}
+            index={1}
             type={"accepted"}
-          />
-          <PatientRequests
-            title={"pending requests"}
-            count={6}
-            index={3}
-            type={"pending"}
+            appointments={
+              acceptedAppointments.length !== 0
+                ? acceptedAppointments
+                : patients
+            }
           />
           <PatientAppointments
             title={"pending appointments"}
-            count={2}
-            index={4}
+            index={2}
             type={"pending"}
-          />
-          <PatientRequests
-            title={"rejected requests"}
-            count={6}
-            index={5}
-            type={"rejected"}
+            appointments={
+              pendingAppointments.length !== 0 ? pendingAppointments : patients
+            }
           />
           <PatientAppointments
             title={"rejected appointments"}
-            count={2}
-            index={6}
+            index={3}
             type={"rejected"}
+            appointments={
+              rejectedAppointments.length !== 0
+                ? rejectedAppointments
+                : patients
+            }
           />
         </div>
       </div>

@@ -16,33 +16,36 @@ const style = {
   overflowY: "scroll",
 };
 
-const doctors = patients;
-
 export const PatientsAppointmentsModal = ({
   open,
   handleClose,
   type,
   title,
+  appointments,
 }) => {
+  const data = patients;
   return (
     <Modal open={open} onClose={handleClose}>
       <div style={style}>
         {type === "pending" ? (
           <PatientAppointmentList
             title={title}
-            data={doctors}
+            data={data}
+            type="pending"
             severity="warning"
           />
         ) : type === "accepted" ? (
           <PatientAppointmentList
             title={title}
-            data={doctors}
+            data={data}
+            type="accepted"
             severity="success"
           />
         ) : type === "rejected" ? (
           <PatientAppointmentList
             title={title}
-            data={doctors}
+            data={data}
+            type="rejected"
             severity="error"
           />
         ) : null}

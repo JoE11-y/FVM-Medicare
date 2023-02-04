@@ -1,6 +1,11 @@
-import { Icon, Typography, Box, Modal, Button, TextField } from "@mui/material"
-import React from "react"
-import MedicationIcon from "@mui/icons-material/Medication"
+import { Icon, Typography, Box, Modal, Button, TextField } from "@mui/material";
+import React, { useState } from "react";
+import { useSigner } from "wagmi";
+import { makeAppointment } from "../apis/FVMMedicare";
+import MedicationIcon from "@mui/icons-material/Medication";
+import { sendMessage } from "../apis/PushProtocol";
+import { useFVMMedicareContract } from "../hooks";
+import { v4 } from "uuid";
 
 const style = {
   position: "absolute",
@@ -12,12 +17,40 @@ const style = {
   boxShadow: 24,
   p: 4,
   borderRadius: "10px",
-}
+};
 
 export const MeetADoctor = () => {
-  const [open, setOpen] = React.useState(false)
-  const handleClose = () => setOpen(false)
-  const handleOpen = () => setOpen(true)
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
+  const [doctorAddress, setDoctorAddress] = useState("");
+  const [message, setMessage] = useState("");
+  const [appointmentType, setAppointmentType] = useState(null);
+
+  const { data: signer } = useSigner();
+
+  const contract = useFVMMedicareContract(signer);
+
+  const sendAppointment = async () => {
+    if (!message || !appointmentType || !doctorAddress) return;
+    const uniqueKey = v4();
+
+    try {
+      const Txn = await makeAppointment(
+        contract,
+        doctorAddress,
+        uniqueKey,
+        appointmentType
+      );
+
+      await Txn.wait();
+
+      await sendMessage(signer.getAddress(), message, doctorAddress, uniqueKey);
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
+
   return (
     <>
       <div className="send-request">
@@ -40,10 +73,12 @@ export const MeetADoctor = () => {
             Schedule a meeting with a Doctor.
           </Typography>
           <TextField
-            label="Doctor's ID"
+            label="Doctor's Address"
             required
             fullWidth
             sx={{ marginTop: "1rem" }}
+            value={doctorAddress}
+            onChange={(e) => setDoctorAddress(e.target.value)}
           />
           <TextField
             label="Enter Message"
@@ -51,12 +86,20 @@ export const MeetADoctor = () => {
             required
             fullWidth
             sx={{ marginTop: "1rem" }}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
           />
-          <Button fullWidth sx={{ marginTop: "1rem" }} variant="contained">
+          <Button
+            fullWidth
+            sx={{ marginTop: "1rem" }}
+            variant="contained"
+            onClick={() => console.log(message)}
+            //onClick={() => sendAppointment()}
+          >
             Send Meeting Request
           </Button>
         </Box>
       </Modal>
     </>
-  )
-}
+  );
+};

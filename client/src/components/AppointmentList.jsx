@@ -5,7 +5,7 @@ import { appointmentSummaryContext } from "../context";
 
 export const AppointmentList = ({ acceptedAppointments }) => {
   const { dispatch } = useContext(appointmentSummaryContext);
-
+  const appointments = patients;
   useEffect(() => {
     if (patients) {
       dispatch({ type: "SET_APPOINTMENTS", payload: patients });
@@ -14,22 +14,13 @@ export const AppointmentList = ({ acceptedAppointments }) => {
   return (
     <div className="patient-appointment-list">
       <h4 style={{ marginBottom: "1rem" }}>Appointment List</h4>
-      {patients.map(
-        ({ name, type, time, image, appointmentId, patientAddress }, key) => (
-          <AppointmentCard
-            name={name}
-            type={type}
-            time={time}
-            key={key}
-            image={image}
-            border={key !== 0 && "none"}
-            appointmentStatus={true}
-            index={key}
-            appointmentId={appointmentId}
-            patientAddress={patientAddress}
-          />
-        )
-      )}
+      {appointments.map((appointment, key) => (
+        <AppointmentCard
+          appointment={appointment}
+          border={key !== 0 && "none"}
+          index={key}
+        />
+      ))}
     </div>
   );
 };

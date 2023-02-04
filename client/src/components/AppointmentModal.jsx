@@ -16,11 +16,7 @@ import { useFVMMedicareContract } from "../hooks";
 import { v4 } from "uuid";
 
 export const AppointmentModal = ({
-  name,
-  image,
-  msg,
-  appointmentId,
-  patientAddress,
+  appointment,
   open,
   handleClose,
   heading,
@@ -46,7 +42,7 @@ export const AppointmentModal = ({
   const handleResponse = async () => {
     if (!message && !toDecline) return;
     let response;
-    const uniqueKey = v4();
+
     if (toDecline) {
       response = 2;
     } else {
@@ -55,10 +51,8 @@ export const AppointmentModal = ({
     try {
       const Txn = await respondToAppointment(
         contract,
-        appointmentId,
-        response,
-        patientAddress,
-        uniqueKey
+        appointment.appointmentId,
+        response
       );
       await Txn.wait();
 
@@ -66,11 +60,13 @@ export const AppointmentModal = ({
         await sendMessage(
           signer.getAddress(),
           message,
-          patientAddress,
-          uniqueKey
+          appointment.patientAddress,
+          appointment.uniqueKey
         );
       }
-    } catch (e) {}
+    } catch (e) {
+      console.log(e.message);
+    }
   };
   return (
     <Modal
@@ -95,15 +91,15 @@ export const AppointmentModal = ({
             className="appointment-img"
             style={{ border: "none", width: "3.6rem", height: "3.6rem" }}
           >
-            <img src={image} alt="patient icon" />
+            <img src={appointment.image} alt="patient icon" />
           </div>
           <div className="patient-name">
-            <p>{name}</p>
+            <p>{appointment.name}</p>
           </div>
         </div>
         <Alert severity="info" style={{ marginTop: "1rem" }}>
           <AlertTitle>Patient's message</AlertTitle>
-          {msg}
+          {appointment.msg}
         </Alert>
         {!toDecline ? (
           <FormControl fullWidth>

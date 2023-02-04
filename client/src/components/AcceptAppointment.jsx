@@ -3,13 +3,7 @@ import { Icon, Button } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import { AppointmentModal } from "./AppointmentModal";
 
-export const AcceptAppointment = ({
-  name,
-  image,
-  msg,
-  appointmentId,
-  patientAddress,
-}) => {
+export const AcceptAppointment = ({ appointment }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -24,11 +18,7 @@ export const AcceptAppointment = ({
         />
       </Button>
       <AppointmentModal
-        name={name}
-        image={image}
-        msg={msg}
-        appointmentId={appointmentId}
-        patientAddress={patientAddress}
+        appointment={appointment}
         open={open}
         handleClose={handleClose}
         heading="Accept Appointment"

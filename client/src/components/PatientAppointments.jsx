@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { PatientsAppointmentsModal } from "./PatientsAppointmentsModal";
 
-export const PatientAppointments = ({ title, index, count, type, onClick }) => {
+export const PatientAppointments = ({ title, index, type, appointments }) => {
   const [active, setActive] = useState(false);
-
+  const count = appointments.length;
   return (
     <>
       <div className="status-box" onClick={() => setActive(true)}>
@@ -25,6 +25,7 @@ export const PatientAppointments = ({ title, index, count, type, onClick }) => {
         open={active}
         type={type}
         title={title}
+        appointments={appointments}
       />
     </>
   );
