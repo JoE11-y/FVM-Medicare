@@ -6,6 +6,7 @@ import { ChooseUser } from "./pages/ChooseUser"
 import { SelectMedicalRecords } from "./pages/SelectMedicalRecords"
 import { DoctorRegistration } from "./pages/DoctorRegistration"
 import { Loader } from "./components/Loader"
+import { PatientRegistration } from "./pages/PatientRegistration"
 
 function App() {
   return (
@@ -15,13 +16,14 @@ function App() {
           <Route element={<LandingPage />} path="/" />
           <Route element={<Loader />} path="/loader" />
           <Route element={<DoctorRegistration />} path="/doctor-form" />
+          <Route element={<PatientRegistration />} path="/patient-form" />
           <Route element={<PatientDashboard />} path="/patient-dashboard" />
           <Route element={<DoctorDashboard />} path="/doctor-dashboard" />
           <Route element={<ChooseUser />} path="/choose-user" />
-          <Route
+          {/* <Route
             element={<SelectMedicalRecords />}
             path="/select-records/:id"
-          />
+          /> */}
         </Routes>
       </Router>
     </div>
