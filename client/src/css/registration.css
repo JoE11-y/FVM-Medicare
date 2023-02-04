@@ -1,0 +1,21 @@
+.reg-page {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  height: 100vh;
+  position: relative;
+}
+
+.reg-ball {
+  height: 100%;
+  width: 100%;
+  background-image: url(../images/bg1.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.reg-form {
+  padding: 4rem 3rem 0 3rem;
+  width: 80%;
+  margin: auto;
+}
