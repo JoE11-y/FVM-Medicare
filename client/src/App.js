@@ -5,6 +5,7 @@ import { DoctorDashboard } from "./pages/DoctorDashboard"
 import { ChooseUser } from "./pages/ChooseUser"
 import { SelectMedicalRecords } from "./pages/SelectMedicalRecords"
 import { DoctorRegistration } from "./pages/DoctorRegistration"
+import { Loader } from "./components/Loader"
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Router>
         <Routes>
           <Route element={<LandingPage />} path="/" />
+          <Route element={<Loader />} path="/loader" />
           <Route element={<DoctorRegistration />} path="/doctor-form" />
           <Route element={<PatientDashboard />} path="/patient-dashboard" />
           <Route element={<DoctorDashboard />} path="/doctor-dashboard" />
