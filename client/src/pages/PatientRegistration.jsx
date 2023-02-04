@@ -18,7 +18,7 @@ export const PatientRegistration = () => {
           {/* <DesktopNav style={{ borderColor: "#272F3F", color: "#272F3F" }} /> */}
         </div>
         <div className="reg-form">
-          <h2>Sign up as a Doctor</h2>
+          <h2>Sign up as a Patient</h2>
           <FormControl fullWidth margin="normal">
             <TextField
               label="Fullname"
