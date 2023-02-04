@@ -86,7 +86,7 @@ export const PatientSummary = () => {
           </div>
         </div>
 
-        <VideoCall isTime={true} />
+        <VideoCall appointmentKey={appointment?.uniqueKey} />
       </div>
       <PatientRecords open={open} handleClose={() => setOpen(!open)} />
     </div>

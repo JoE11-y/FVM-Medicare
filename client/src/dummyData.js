@@ -14,6 +14,7 @@ export const patients = [
     patientAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
     cid: "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM",
     info: "Male - 28 Years 03 Months",
+    uniqueKey: "yshsyhsy",
   },
   {
     name: "Sophia Moore",
@@ -25,6 +26,7 @@ export const patients = [
     patientAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
     cid: "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM",
     info: "Male - 28 Years 03 Months",
+    uniqueKey: "yshsyhsy",
   },
   {
     name: "Campbell Deschamp",
@@ -36,6 +38,7 @@ export const patients = [
     patientAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
     cid: "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM",
     info: "Male - 28 Years 03 Months",
+    uniqueKey: "yshsyhsy",
   },
   {
     name: "Jesse pep",
@@ -47,6 +50,7 @@ export const patients = [
     patientAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
     cid: "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM",
     info: "Male - 28 Years 03 Months",
+    uniqueKey: "yshsyhsy",
   },
 ];
 

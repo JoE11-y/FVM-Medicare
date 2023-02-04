@@ -1,16 +1,15 @@
-import React, { useState } from "react"
-import { Button, Icon } from "@mui/material"
-import VideoCallIcon from "@mui/icons-material/VideoCall"
-import CancelPresentationIcon from "@mui/icons-material/CancelPresentation"
-import { HuddleCall } from "./HuddleCall"
+import React, { useState } from "react";
+import { Button, Icon } from "@mui/material";
+import VideoCallIcon from "@mui/icons-material/VideoCall";
+import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
+import { HuddleCall } from "./HuddleCall";
 
-export const VideoCall = ({ isTime }) => {
-  const [show, setShow] = useState(false)
-  console.log(show)
+export const VideoCall = ({ appointmentKey }) => {
+  const [show, setShow] = useState(false);
+  console.log(show);
   return (
     <>
       <Button
-        disabled={!isTime}
         style={{
           width: "100%",
           marginTop: "0.5rem",
@@ -18,27 +17,21 @@ export const VideoCall = ({ isTime }) => {
         size="small"
         onClick={() => setShow(!show)}
       >
-        {isTime ? (
+        {!show ? (
           <>
-            {!show ? (
-              <>
-                {" "}
-                <Icon component={VideoCallIcon} color="info" fontSize="large" />
-                <small>Start Call</small>{" "}
-              </>
-            ) : (
-              <>
-                <Icon
-                  component={CancelPresentationIcon}
-                  color="danger"
-                  fontSize="large"
-                />
-                <small>End Call</small>{" "}
-              </>
-            )}
+            {" "}
+            <Icon component={VideoCallIcon} color="info" fontSize="large" />
+            <small>Start Call</small>{" "}
           </>
         ) : (
-          <>Not Yet Time</>
+          <>
+            <Icon
+              component={CancelPresentationIcon}
+              color="danger"
+              fontSize="large"
+            />
+            <small>End Call</small>{" "}
+          </>
         )}
       </Button>
 
@@ -55,7 +48,7 @@ export const VideoCall = ({ isTime }) => {
             padding: "1rem",
           }}
         >
-          <HuddleCall meetId={"tyre"} />
+          <HuddleCall meetId={appointmentKey} />
           <div
             style={{
               display: "flex",
@@ -75,5 +68,5 @@ export const VideoCall = ({ isTime }) => {
         <></>
       )}
     </>
-  )
-}
+  );
+};
