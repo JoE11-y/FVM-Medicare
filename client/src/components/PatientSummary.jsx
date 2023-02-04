@@ -83,7 +83,7 @@ export const PatientSummary = () => {
           </div>
         </div>
 
-        <VideoCall isTime={true} />
+        <VideoCall appointmentKey={appointment?.uniqueKey} />
       </div>
     </div>
   );
