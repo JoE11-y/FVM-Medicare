@@ -103,7 +103,7 @@ export const loadAppointments = async (address, contract, isDoctor = true) => {
   return { acceptedappointments, pendingAppointments, rejectedAppointments };
 };
 
-export const loadRequestCID = async (contract, address, patientAddress) => {
+const loadRequestCID = async (contract, address, patientAddress) => {
   const requestCount = await getRequestCount(contract, address);
 
   let message;
