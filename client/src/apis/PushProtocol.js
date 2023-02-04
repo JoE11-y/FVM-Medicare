@@ -83,10 +83,10 @@ export const getUserMessage = async (
     const currNotification = notifications[i];
     if (currNotification.app != "FVM Medicare") continue;
     const notificationTitle = currNotification.notification["body"];
-    const uniquekey = currNotification.title.slice(9);
+    const uniquekey = currNotification.title.slice(8);
     const address = notificationTitle.slice(5);
     if (
-      address.toLowerCase() != addressFrom.toLowerCase() &&
+      address.toLowerCase() != addressFrom.toLowerCase() ||
       uniquekey.toLowerCase() != msgUniqueKey.toLowerCase()
     )
       continue;

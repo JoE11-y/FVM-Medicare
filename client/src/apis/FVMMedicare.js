@@ -71,13 +71,26 @@ export const loadAppointments = async (address, contract, isDoctor = true) => {
     );
 
     let info;
+    let cid;
     if (isDoctor) {
       info = await getInformation(contract, appointmentData.patientInfo);
+      cid = await loadRequestCID(
+        contract,
+        address,
+        appointmentData.patientAddress
+      );
     } else {
       info = await getInformation(contract, appointmentData.doctorAddress);
+      cid = "";
     }
 
-    let appointment = { ...appointmentData, ...info, message: message };
+    let appointment = {
+      ...appointmentData,
+      ...info,
+      message: message,
+      cid: cid,
+    };
+
     if (Number(appointment.status) === 0) {
       pendingAppointments.push(appointment);
     } else if (Number(appointment.status) === 1) {
@@ -90,6 +103,28 @@ export const loadAppointments = async (address, contract, isDoctor = true) => {
   return { acceptedappointments, pendingAppointments, rejectedAppointments };
 };
 
+export const loadRequestCID = async (contract, address, patientAddress) => {
+  const requestCount = await getRequestCount(contract, address);
+
+  let message;
+
+  for (let i = 0; i < Number(requestCount); i++) {
+    const requestData = await getRequest(contract, address, i);
+
+    if (
+      requestData.patientAddress.toLowerCase() !== patientAddress.toLowerCase()
+    )
+      continue;
+
+    message = await getUserMessage(
+      address,
+      requestData.patientAddress,
+      requestData.uniqueKey
+    );
+  }
+  return message;
+};
+
 export const loadRequests = async (contract, address, isDoctor = false) => {
   let acceptedRequests = [];
   let pendingRequests = [];
@@ -99,15 +134,16 @@ export const loadRequests = async (contract, address, isDoctor = false) => {
 
   for (let i = 0; i < Number(requestCount); i++) {
     const requestData = await getRequest(contract, address, i);
+
     const message = await getUserMessage(
       address,
-      requestData.patientAddress,
+      requestData.doctorAddress,
       requestData.uniqueKey
     );
 
     let info;
     if (isDoctor) {
-      info = await getInformation(contract, requestData.patientInfo);
+      info = await getInformation(contract, requestData.patientAddress);
     } else {
       info = await getInformation(contract, requestData.doctorAddress);
     }
