@@ -86,7 +86,7 @@ export const getUserMessage = async (
     const uniquekey = currNotification.title.slice(9)
     const address = notificationTitle.slice(5)
     if (
-      address.toLowerCase() != addressFrom.toLowerCase() &&
+      address.toLowerCase() != addressFrom.toLowerCase() ||
       uniquekey.toLowerCase() != msgUniqueKey.toLowerCase()
     )
       continue

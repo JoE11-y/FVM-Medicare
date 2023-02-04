@@ -44,7 +44,7 @@ export const AppointmentModal = ({
   const contract = useFVMMedicareContract(signer);
 
   const handleResponse = async () => {
-    if (!message) return;
+    if (!message && !toDecline) return;
     let response;
     const uniqueKey = v4();
     if (toDecline) {
@@ -62,12 +62,14 @@ export const AppointmentModal = ({
       );
       await Txn.wait();
 
-      await sendMessage(
-        signer.getAddress(),
-        message,
-        patientAddress,
-        uniqueKey
-      );
+      if (!toDecline) {
+        await sendMessage(
+          signer.getAddress(),
+          message,
+          patientAddress,
+          uniqueKey
+        );
+      }
     } catch (e) {}
   };
   return (
@@ -131,7 +133,6 @@ export const AppointmentModal = ({
             color="error"
             fullWidth
             sx={{ marginTop: "1rem" }}
-            onClick={() => console.log(message)}
             // onClick={() => handleResponse()}
           >
             Decline Appointment
