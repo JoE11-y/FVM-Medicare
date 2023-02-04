@@ -1,7 +1,7 @@
-import patient1 from "./images/patient1.jpg";
-import patient2 from "./images/patient2.jpg";
-import patient3 from "./images/patient3.jpg";
-import patient4 from "./images/patient4.jpg";
+import patient1 from "./images/patient1.jpg"
+import patient2 from "./images/patient2.jpg"
+import patient3 from "./images/patient3.jpg"
+import patient4 from "./images/patient4.jpg"
 
 export const patients = [
   {
@@ -72,11 +72,17 @@ export const patients = [
     message:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
   },
-];
+]
 
-export const doctors = [];
+export const doctors = []
 
 export const records = [
+  {
+    type: "Your Base Data",
+    preview: ["Allergies", "Blood Group", "Genotype"],
+    updated: "27.01.2023",
+    created: "23.01.2020",
+  },
   {
     type: "Patient Information Leaflet",
     preview: ["Pharmacy", "Medicine Side Effects", "dosage"],
@@ -107,10 +113,4 @@ export const records = [
     updated: "27.01.2023",
     created: "23.01.2020",
   },
-  {
-    type: "Medical Record History",
-    preview: ["Notes and Remarks", "Prescription", "Doctor"],
-    updated: "27.01.2023",
-    created: "23.01.2020",
-  },
-];
+]
