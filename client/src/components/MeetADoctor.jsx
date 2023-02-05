@@ -1,4 +1,15 @@
-import { Icon, Typography, Box, Modal, Button, TextField } from "@mui/material";
+import {
+  Icon,
+  Typography,
+  Box,
+  Modal,
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 import React, { useState } from "react";
 import { useSigner } from "wagmi";
 import { makeAppointment } from "../apis/FVMMedicare";
@@ -50,7 +61,9 @@ export const MeetADoctor = () => {
       console.log(e.message);
     }
   };
-
+  const handleSelect = (event) => {
+    setAppointmentType(event.target.value);
+  };
   return (
     <>
       <div className="send-request">
@@ -69,35 +82,50 @@ export const MeetADoctor = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h5">
-            Schedule a meeting with a Doctor.
-          </Typography>
-          <TextField
-            label="Doctor's Address"
-            required
-            fullWidth
-            sx={{ marginTop: "1rem" }}
-            value={doctorAddress}
-            onChange={(e) => setDoctorAddress(e.target.value)}
-          />
-          <TextField
-            label="Enter Message"
-            multiline
-            required
-            fullWidth
-            sx={{ marginTop: "1rem" }}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <Button
-            fullWidth
-            sx={{ marginTop: "1rem" }}
-            variant="contained"
-            onClick={() => console.log(message)}
-            //onClick={() => sendAppointment()}
-          >
-            Send Meeting Request
-          </Button>
+          <FormControl fullWidth>
+            <InputLabel id="meeting-type-select-label">Meeting Type</InputLabel>
+            <Select
+              fullWidth
+              variant="standard"
+              label="Meeting Type"
+              sx={{ marginTop: "1rem" }}
+              labelId="meeting-type-select-label"
+              id="meeting-type-select"
+              value={appointmentType}
+              onChange={handleSelect}
+            >
+              <MenuItem value={"report"}>Report</MenuItem>
+              <MenuItem value={"lab-test"}>Lab Test</MenuItem>
+              <MenuItem value={"surgery"}>Surgery</MenuItem>
+            </Select>
+            <TextField
+              label="Doctor's ID"
+              required
+              fullWidth
+              sx={{ marginTop: "1rem" }}
+              value={doctorAddress}
+              onChange={(e) => setDoctorAddress(e.target.value)}
+            />
+            <TextField
+              label="Enter Message"
+              multiline
+              required
+              fullWidth
+              sx={{ marginTop: "1rem" }}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+
+            <Button
+              fullWidth
+              sx={{ marginTop: "1rem" }}
+              variant="contained"
+              onClick={() => console.log(message)}
+              //onClick={() => sendAppointment()}
+            >
+              Send Meeting Request
+            </Button>
+          </FormControl>
         </Box>
       </Modal>
     </>
