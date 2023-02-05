@@ -1,57 +1,57 @@
-import { Alert, AlertTitle, Button } from "@mui/material";
-import React from "react";
-import { useSigner, useProvider } from "wagmi";
-import { Icon } from "@mui/material";
-import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
-import { useFVMMedicareContract } from "../hooks";
-import { VideoCall } from "./VideoCall";
-import { respondToDataRequest } from "../apis/FVMMedicare";
-import { revokeAccess, shareAccess } from "../apis/Lighthouse";
+import { Alert, AlertTitle, Button } from "@mui/material"
+import React from "react"
+import { useSigner, useProvider } from "wagmi"
+import { Icon } from "@mui/material"
+import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy"
+import { useFVMMedicareContract } from "../hooks"
+import { VideoCall } from "./VideoCall"
+import { respondToDataRequest } from "../apis/FVMMedicare"
+import { revokeAccess, shareAccess } from "../apis/Lighthouse"
 
 export const PatientAppointmentCard = ({ appointment, type }) => {
-  const provider = useProvider();
-  const { data: signer, isFetched } = useSigner();
-  const contract = useFVMMedicareContract(provider);
+  const provider = useProvider()
+  const { data: signer, isFetched } = useSigner()
+  const contract = useFVMMedicareContract(provider)
 
   const handleResponse = async (response) => {
-    if (!isFetched) return;
-    const linkedContract = contract.connect(signer);
+    if (!isFetched) return
+    const linkedContract = contract.connect(signer)
     try {
       if (response) {
         const result = await shareAccess(
           appointment.cid,
           signer,
           appointment.doctorAddress
-        );
+        )
         if (result.status === "Success") {
           const Txn = await respondToDataRequest(
             linkedContract,
             appointment.appointmentId,
             response
-          );
+          )
 
-          await Txn.wait();
+          await Txn.wait()
         }
       } else {
         const result = await revokeAccess(
           appointment.cid,
           signer,
           appointment.doctorAddress
-        );
+        )
         if (result.status === "Success") {
           const Txn = await respondToDataRequest(
             linkedContract,
             appointment.appointmentId,
             response
-          );
+          )
 
-          await Txn.wait();
+          await Txn.wait()
         }
       }
     } catch (e) {
-      console.log(e.message);
+      console.log(e.message)
     }
-  };
+  }
 
   return (
     <div>
@@ -109,6 +109,7 @@ export const PatientAppointmentCard = ({ appointment, type }) => {
                   gridTemplateColumns: "3fr 3fr",
                   alignItems: "center",
                   marginBottom: "1rem",
+                  width: "100%",
                 }}
               >
                 <VideoCall meetId={appointment.uniqueKey} />
@@ -137,5 +138,5 @@ export const PatientAppointmentCard = ({ appointment, type }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

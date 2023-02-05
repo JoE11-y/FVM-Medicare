@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { Button, Icon } from "@mui/material";
-import VideoCallIcon from "@mui/icons-material/VideoCall";
-import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
-import { HuddleCall } from "./HuddleCall";
+import React, { useState } from "react"
+import { Button, Icon } from "@mui/material"
+import VideoCallIcon from "@mui/icons-material/VideoCall"
+import CancelPresentationIcon from "@mui/icons-material/CancelPresentation"
+import { HuddleCall } from "./HuddleCall"
 
 export const VideoCall = ({ meetId }) => {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false)
   return (
     <>
       <Button
@@ -67,5 +67,5 @@ export const VideoCall = ({ meetId }) => {
         <></>
       )}
     </>
-  );
-};
+  )
+}

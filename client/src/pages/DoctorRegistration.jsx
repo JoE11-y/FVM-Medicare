@@ -1,40 +1,40 @@
-import { Button, FormControl, TextField } from "@mui/material";
-import React, { useState } from "react";
-import { useSigner, useProvider } from "wagmi";
-import { useFVMMedicareContract } from "../hooks";
-import { Logo } from "../components/Logo";
-import { uploadFile, uploadEncryptedData } from "../apis/Lighthouse";
-import DatePicker from "react-date-picker";
+import { Button, FormControl, TextField } from "@mui/material"
+import React, { useState } from "react"
+import { useSigner, useProvider } from "wagmi"
+import { useFVMMedicareContract } from "../hooks"
+import { Logo } from "../components/Logo"
+import { uploadFile, uploadEncryptedData } from "../apis/Lighthouse"
+import DatePicker from "react-date-picker"
 
 export const DoctorRegistration = () => {
-  const { data: signer, isFetched } = useSigner();
-  const provider = useProvider();
-  const contract = useFVMMedicareContract(provider);
-  const [dob, setDob] = useState(new Date());
-  const [name, setName] = useState("");
-  const [nationality, setNationality] = useState("");
-  const [pronouns, setPronouns] = useState("");
-  const [hospital, setHospital] = useState("");
-  const [location, setLocation] = useState("");
-  const [specialization, setSpecialization] = useState("");
-  const [imageCid, setImageCid] = useState("");
-  const [docCID, setDocCID] = useState("");
+  const { data: signer, isFetched } = useSigner()
+  const provider = useProvider()
+  const contract = useFVMMedicareContract(provider)
+  const [dob, setDob] = useState(new Date())
+  const [name, setName] = useState("")
+  const [nationality, setNationality] = useState("")
+  const [pronouns, setPronouns] = useState("")
+  const [hospital, setHospital] = useState("")
+  const [location, setLocation] = useState("")
+  const [specialization, setSpecialization] = useState("")
+  const [imageCid, setImageCid] = useState("")
+  const [docCID, setDocCID] = useState("")
 
   const handleFileUpload = async (e, file) => {
-    if (!isFetched) return;
-    console.log(e);
+    if (!isFetched) return
+    console.log(e)
     try {
-      const output = await uploadFile(e, signer);
-      if (!output) return;
-      if (file === "image") setImageCid(output.data.Hash);
+      const output = await uploadFile(e, signer)
+      if (!output) return
+      if (file === "image") setImageCid(output.data.Hash)
       if (file === "doc") {
-        setDocCID(output.data.Hash);
+        setDocCID(output.data.Hash)
       }
-      console.log(output.data.Hash);
+      console.log(output.data.Hash)
     } catch (e) {
-      console.log(e.message);
+      console.log(e.message)
     }
-  };
+  }
 
   const formNotFilled = () =>
     !(
@@ -47,12 +47,12 @@ export const DoctorRegistration = () => {
       specialization &&
       imageCid &&
       docCID
-    );
+    )
 
   const handleDataUpload = async () => {
-    if (formNotFilled && !isFetched) return;
+    if (formNotFilled && !isFetched) return
     try {
-      const linkedContract = contract.connect(signer);
+      const linkedContract = contract.connect(signer)
       const data = {
         name: name,
         dob: dob.getTime(),
@@ -62,24 +62,24 @@ export const DoctorRegistration = () => {
         specialization: specialization,
         imageCid: imageCid,
         docCid: docCID,
-      };
-      console.log(data);
-      const output = await uploadEncryptedData(signer, data);
-      console.log(output);
-      if (!output) return;
-      const uri = output.data.Hash;
+      }
+      console.log(data)
+      const output = await uploadEncryptedData(signer, data)
+      console.log(output)
+      if (!output) return
+      const uri = output.data.Hash
       const Txn = await linkedContract.register(0, uri, {
         name,
         specialization,
         hospital,
         image: imageCid,
-      });
+      })
 
-      await Txn.wait();
+      await Txn.wait()
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
-  };
+  }
 
   return (
     <div>
@@ -96,12 +96,17 @@ export const DoctorRegistration = () => {
               size="small"
               value={name}
               onChange={(e) => {
-                setName(e.target.value);
+                setName(e.target.value)
               }}
               sx={{ marginBottom: "0.6rem" }}
             />
 
-            <DatePicker onChange={setDob} value={dob} />
+            <DatePicker
+              onChange={setDob}
+              value={dob}
+              className="date-picker"
+              name="DOB"
+            />
 
             <TextField
               label="Nationality"
@@ -182,5 +187,5 @@ export const DoctorRegistration = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

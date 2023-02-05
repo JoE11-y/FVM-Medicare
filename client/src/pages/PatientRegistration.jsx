@@ -1,28 +1,29 @@
-import { Button, FormControl, TextField } from "@mui/material";
-import React, { useState } from "react";
-import { useSigner, useProvider } from "wagmi";
-import { useFVMMedicareContract } from "../hooks";
-import { Logo } from "../components/Logo";
-import { uploadFile, uploadEncryptedData } from "../apis/Lighthouse";
+import { Button, FormControl, TextField } from "@mui/material"
+import React, { useState } from "react"
+import { useSigner, useProvider } from "wagmi"
+import { useFVMMedicareContract } from "../hooks"
+import { Logo } from "../components/Logo"
+import { uploadFile, uploadEncryptedData } from "../apis/Lighthouse"
+import DatePicker from "react-date-picker"
 
 export const PatientRegistration = () => {
-  const { data: signer, isFetched } = useSigner();
-  const provider = useProvider();
-  const contract = useFVMMedicareContract(provider);
+  const { data: signer, isFetched } = useSigner()
+  const provider = useProvider()
+  const contract = useFVMMedicareContract(provider)
 
-  const [name, setName] = useState("");
-  const [dob, setDob] = useState("");
-  const [nationality, setNationality] = useState("");
-  const [pronouns, setPronouns] = useState("");
-  const [specialization, setSpecialization] = useState("");
-  const [location, setLocation] = useState("");
-  const [imageCid, setImageCid] = useState("");
+  const [name, setName] = useState("")
+  const [dob, setDob] = useState("")
+  const [nationality, setNationality] = useState("")
+  const [pronouns, setPronouns] = useState("")
+  const [specialization, setSpecialization] = useState("")
+  const [location, setLocation] = useState("")
+  const [imageCid, setImageCid] = useState("")
 
   const handleFileUpload = async (e) => {
-    const output = await uploadFile(e);
-    if (!output.isSuccess) return;
-    setImageCid(output.data.Hash);
-  };
+    const output = await uploadFile(e)
+    if (!output.isSuccess) return
+    setImageCid(output.data.Hash)
+  }
 
   return (
     <div>
@@ -40,17 +41,16 @@ export const PatientRegistration = () => {
               size="small"
               value={name}
               onChange={(e) => {
-                setName(e.target.value);
+                setName(e.target.value)
               }}
               sx={{ marginBottom: "0.6rem" }}
             />
-            <TextField
-              label="Date of Birth"
-              fullWidth
-              size="small"
+
+            <DatePicker
+              onChange={setDob}
               value={dob}
-              onChange={(e) => setDob(e.target.value)}
-              sx={{ marginBottom: "0.6rem" }}
+              className="date-picker"
+              name="DOB"
             />
             <TextField
               label="Nationality"
@@ -108,6 +108,28 @@ export const PatientRegistration = () => {
               size="small"
               sx={{ marginBottom: "0.6rem" }}
             />
+            <TextField
+              label="Known Allergies"
+              fullWidth
+              size="small"
+              sx={{ marginBottom: "0.6rem" }}
+              multiline
+            />
+            <TextField
+              label="Past Medical History"
+              fullWidth
+              size="small"
+              sx={{ marginBottom: "0.6rem" }}
+              multiline
+            />
+            <TextField
+              label="Past Surgical History"
+              fullWidth
+              size="small"
+              sx={{ marginBottom: "0.6rem" }}
+              multiline
+            />
+
             <div>
               <label htmlFor="doctor-picture" style={{ display: "block" }}>
                 Profile Picture
@@ -130,5 +152,5 @@ export const PatientRegistration = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

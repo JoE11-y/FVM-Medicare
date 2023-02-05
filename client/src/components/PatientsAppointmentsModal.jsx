@@ -1,20 +1,20 @@
-import React from "react";
-import { Modal } from "@mui/material";
-import { patients } from "../dummyData";
-import { PatientAppointmentList } from "./PatientAppointmentList";
+import React from "react"
+import { Modal } from "@mui/material"
+import { patients } from "../dummyData"
+import { PatientAppointmentList } from "./PatientAppointmentList"
 
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 600,
-  maxHeight: "80vh",
+  width: "70vw",
+  maxHeight: "100vh",
   backgroundColor: "#fff",
   boxShadow: 24,
   borderRadius: "10px",
   overflowY: "scroll",
-};
+}
 
 export const PatientsAppointmentsModal = ({
   open,
@@ -23,7 +23,7 @@ export const PatientsAppointmentsModal = ({
   title,
   appointments,
 }) => {
-  const data = patients;
+  const data = patients
   return (
     <Modal open={open} onClose={handleClose}>
       <div style={style}>
@@ -58,5 +58,5 @@ export const PatientsAppointmentsModal = ({
         ) : null}
       </div>
     </Modal>
-  );
-};
+  )
+}
