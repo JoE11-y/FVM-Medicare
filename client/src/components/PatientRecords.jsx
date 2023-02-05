@@ -1,13 +1,16 @@
-import React from "react"
+import React, { useEffect, useCallback, useState } from "react";
 import {
   Modal,
   Accordion,
   AccordionDetails,
   AccordionSummary,
-} from "@mui/material"
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import { Box } from "@mui/system"
-import { PatientRecord } from "./PatientRecord"
+} from "@mui/material";
+import { useSigner, useProvider } from "wagmi";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Box } from "@mui/system";
+import { usePatientNFTContract } from "../hooks";
+import { downloadNDecryptData } from "../apis/Lighthouse";
+import { PatientRecord } from "./PatientRecord";
 
 const style = {
   position: "absolute",
@@ -21,9 +24,33 @@ const style = {
   p: 4,
   borderRadius: "10px",
   overflowY: "scroll",
-}
+};
 
-export const PatientRecords = ({ open, handleClose, id }) => {
+export const PatientRecords = ({ open, handleClose, appointment }) => {
+  const [patientData, setPatientData] = useState({});
+
+  const provider = useProvider();
+
+  const { data: signer, isFetched } = useSigner();
+
+  const patientNftContract = usePatientNFTContract(provider);
+
+  const getPatientRecord = useCallback(async () => {
+    const patientTokenId = patientNftContract.getTokenId(
+      appointment.patientAddress
+    );
+    const patientCID = patientNftContract.tokenURI(patientTokenId);
+    if (isFetched) {
+      const data = downloadNDecryptData(patientCID, signer);
+      setPatientData(data);
+      console.log(data);
+    }
+  }, []);
+
+  useEffect(() => {
+    // getPatientRecord();
+  }, [getPatientRecord]);
+
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
@@ -46,5 +73,5 @@ export const PatientRecords = ({ open, handleClose, id }) => {
         </Accordion>
       </Box>
     </Modal>
-  )
-}
+  );
+};

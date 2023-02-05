@@ -27,7 +27,14 @@ export const PatientsAppointmentsModal = ({
   return (
     <Modal open={open} onClose={handleClose}>
       <div style={style}>
-        {type === "pending" ? (
+        {type === "scheduled" ? (
+          <PatientAppointmentList
+            title={title}
+            data={data}
+            type="scheduled"
+            severity="info"
+          />
+        ) : type === "pending" ? (
           <PatientAppointmentList
             title={title}
             data={data}

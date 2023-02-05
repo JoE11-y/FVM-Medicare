@@ -1,17 +1,19 @@
-import { Button, Modal } from "@mui/material"
-import { Box } from "@mui/system"
-import React from "react"
-import { PatientRecord } from "./PatientRecord"
+import { Button, Modal } from "@mui/material";
+import { Box } from "@mui/system";
+import React from "react";
+import { PatientRecord } from "./PatientRecord";
 
 export const MedicalRecordCard = ({ type, preview = [], updated, created }) => {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(false);
   return (
     <div className="medical-record_card">
       <h4>{type}</h4>
       <div style={{ padding: "1.2rem" }}>
         <div>
-          {preview.map((item) => (
-            <p className="record-item_preview">{item}</p>
+          {preview.map((item, key) => (
+            <p key={key} className="record-item_preview">
+              {item}
+            </p>
           ))}
         </div>
         <div className="medical-record_card-timeline">
@@ -36,8 +38,8 @@ export const MedicalRecordCard = ({ type, preview = [], updated, created }) => {
       </div>
       <MedicalRecordModal open={open} handleClose={() => setOpen(!open)} />
     </div>
-  )
-}
+  );
+};
 
 const MedicalRecordModal = ({ open, handleClose, id }) => {
   const style = {
@@ -52,12 +54,12 @@ const MedicalRecordModal = ({ open, handleClose, id }) => {
     p: 4,
     borderRadius: "10px",
     overflowY: "scroll",
-  }
+  };
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <PatientRecord />
       </Box>
     </Modal>
-  )
-}
+  );
+};

@@ -1,12 +1,12 @@
-import { LandingPage } from "./pages/LandingPage"
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
-import { PatientDashboard } from "./pages/PatientDashboard"
-import { DoctorDashboard } from "./pages/DoctorDashboard"
-import { ChooseUser } from "./pages/ChooseUser"
-import { SelectMedicalRecords } from "./pages/SelectMedicalRecords"
-import { DoctorRegistration } from "./pages/DoctorRegistration"
-import { Loader } from "./components/Loader"
-import { PatientRegistration } from "./pages/PatientRegistration"
+import { LandingPage } from "./pages/LandingPage";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { PatientDashboard } from "./pages/PatientDashboard";
+import { DoctorDashboard } from "./pages/DoctorDashboard";
+import { ChooseUser } from "./pages/ChooseUser";
+// import { SelectMedicalRecords } from "./pages/SelectMedicalRecords"
+import { DoctorRegistration } from "./pages/DoctorRegistration";
+import { Loader } from "./components/Loader";
+import { PatientRegistration } from "./pages/PatientRegistration";
 
 function App() {
   return (
@@ -27,7 +27,7 @@ function App() {
         </Routes>
       </Router>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

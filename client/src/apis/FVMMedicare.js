@@ -53,7 +53,8 @@ export const getAppointment = async (contract, address, appointmentId) => {
 };
 
 export const loadAppointments = async (address, contract, isDoctor = true) => {
-  let acceptedappointments = [];
+  let completedAppointments = [];
+  let acceptedAppointments = [];
   let pendingAppointments = [];
   let rejectedAppointments = [];
   const appointmentCount = await getAppointmentCount(contract, address);
@@ -62,12 +63,18 @@ export const loadAppointments = async (address, contract, isDoctor = true) => {
     const appointmentData = await getAppointment(contract, address, i);
     let info;
     let message;
+    let doctorMessage;
 
     if (isDoctor) {
       info = await getInformation(contract, appointmentData.patientInfo);
       message = await getUserMessage(
         address,
         appointmentData.patientAddress,
+        appointmentData.uniqueKey
+      );
+      doctorMessage = await getUserMessage(
+        address,
+        appointmentData.doctorAddress,
         appointmentData.uniqueKey
       );
     } else {
@@ -83,16 +90,28 @@ export const loadAppointments = async (address, contract, isDoctor = true) => {
       ...appointmentData,
       ...info,
       message: message,
+      doctorMessage: doctorMessage,
     };
 
     if (Number(appointment.status) === 0) {
       pendingAppointments.push(appointment);
+    } else if (
+      Number(appointment.status) === 1 &&
+      appointment.medicalRecordShared &&
+      !isDoctor
+    ) {
+      completedAppointments.push(appointment);
     } else if (Number(appointment.status) === 1) {
-      acceptedappointments.push(appointment);
+      acceptedAppointments.push(appointment);
     } else if (Number(appointment.status) === 2) {
       rejectedAppointments.push(appointment);
     }
   }
 
-  return { acceptedappointments, pendingAppointments, rejectedAppointments };
+  return {
+    completedAppointments,
+    acceptedAppointments,
+    pendingAppointments,
+    rejectedAppointments,
+  };
 };

@@ -1,9 +1,9 @@
 import React from "react";
 import { AppointmentCard } from "./AppointmentCard";
-import { patients } from "../dummyData";
+import { patientsPending } from "../dummyData";
 
 export const DoctorPendingAppointment = ({ pendingAppointment }) => {
-  const appointments = patients;
+  const appointments = patientsPending;
   return (
     <div className="pending-appointments">
       <h4 style={{ marginBottom: "1rem" }}>Pending Patients Request</h4>

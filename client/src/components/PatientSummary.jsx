@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import { useSigner } from "wagmi";
 import { VideoCall } from "./VideoCall";
 import { appointmentSummaryContext } from "../context";
-import { downloadNDecryptData } from "../apis/Lighthouse";
 import { PatientRecords } from "./PatientRecords";
 
 export const PatientSummary = () => {
@@ -13,19 +12,6 @@ export const PatientSummary = () => {
   } = useContext(appointmentSummaryContext);
 
   const { data: signer, isFetched } = useSigner();
-
-  const [patientData, setPatientData] = useState({});
-
-  const getPatientRecord = async () => {
-    const cid = appointment?.cid;
-    if (isFetched) {
-      const data = downloadNDecryptData(cid, signer);
-      setPatientData(data);
-    }
-  };
-
-  //@frank
-  //add button to view to display patient medical record on doctor view.
 
   return (
     <div>
@@ -54,41 +40,28 @@ export const PatientSummary = () => {
             style={{ color: "#EF798A", fontWeight: "bold", cursor: "pointer" }}
             onClick={() => setOpen(true)}
           >
-            view
+            View Record
           </small>
-        </div>
-
-        <div className="symptoms">
-          {appointment?.symptoms?.map((symptom, key) => (
-            <div key={key}>
-              <div
-                className="symptom_color"
-                style={{ backgroundColor: colors[key] }}
-              ></div>
-              <small className="symptom">{symptom}</small>
-            </div>
-          ))}
         </div>
 
         <div className="previous-actions">
           <div className="previous-action">
-            <h5>Last Checked</h5>
-            <small>
-              <b>Dr Kimberly</b> on FVM Laboratory in 13 May 2022.
-            </small>
+            <h5>Patient Message</h5>
+            <small>{appointment.message}</small>
           </div>
           <div className="previous-action">
-            <h5>Observation</h5>
-            <small>
-              Three sickle cell patients were sustained at normal hemoglobin
-              levels.
-            </small>
+            <h5>Your Message</h5>
+            <small>{appointment.doctorMessage}.</small>
           </div>
         </div>
 
-        <VideoCall key={appointment?.requestKey} />
+        <VideoCall meetId={appointment?.appointmentKey} />
       </div>
-      <PatientRecords open={open} handleClose={() => setOpen(!open)} />
+      <PatientRecords
+        open={open}
+        appointment={appointment}
+        handleClose={() => setOpen(!open)}
+      />
     </div>
   );
 };

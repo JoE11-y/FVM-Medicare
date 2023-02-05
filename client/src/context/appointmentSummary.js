@@ -12,9 +12,16 @@ const appointmentReducer = (state, action) => {
         appointment: state.appointments[action.payload],
       };
     case "SET_APPOINTMENTS":
+      let appointment = {};
+      for (let i = 0; i < action.payload.length; i++) {
+        if (action.payload[i].medicalRecordShared) {
+          appointment = action.payload[i];
+          break;
+        }
+      }
       return {
         ...state,
-        appointment: action.payload[0],
+        appointment: appointment,
         appointments: action.payload,
       };
     default:

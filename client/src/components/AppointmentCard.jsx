@@ -10,7 +10,8 @@ export const AppointmentCard = ({ appointment, border, cursor, index }) => {
       className="appointment-card"
       style={{ border, cursor }}
       onClick={() => {
-        appointment.appointmentStatus == 2 &&
+        appointment.appointmentStatus === 2 &&
+          appointment.medicalRecordShared &&
           dispatch({ type: "SET_CURR_APPOINTMENT", payload: index });
       }}
     >
@@ -21,9 +22,13 @@ export const AppointmentCard = ({ appointment, border, cursor, index }) => {
         <p>{appointment.name}</p>
         <small style={{ opacity: 0.5 }}>{appointment.appointmentType}</small>
       </div>
-      {appointment.appointmentStatus == 2 ? (
-        <div className="appointment-time">{appointment.appointmentType}</div>
-      ) : appointment.appointmentStatus == 1 ? (
+      {appointment.appointmentStatus === 2 ? (
+        appointment.requestStatus === 1 && !appointment.medicalRecordShared ? (
+          <div className="appointment-time">Awaiting Medical Record</div>
+        ) : (
+          <div className="appointment-time">Medical Record Available</div>
+        )
+      ) : appointment.appointmentStatus === 1 ? (
         <div className="appointment-time">
           <AcceptAppointment appointment={appointment} />
           <DeclineAppointment appointment={appointment} />

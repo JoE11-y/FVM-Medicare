@@ -1,7 +1,7 @@
-import patient1 from "./images/patient1.jpg"
-import patient2 from "./images/patient2.jpg"
-import patient3 from "./images/patient3.jpg"
-import patient4 from "./images/patient4.jpg"
+import patient1 from "./images/patient1.jpg";
+import patient2 from "./images/patient2.jpg";
+import patient3 from "./images/patient3.jpg";
+import patient4 from "./images/patient4.jpg";
 
 export const patients = [
   {
@@ -17,7 +17,8 @@ export const patients = [
     cid: "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM",
     info: "Male - 28 Years 03 Months",
     uniqueKey: "yshsyhsy1",
-    requestKey: "yshsyhsy3",
+    requestStatus: 0,
+    medicalRecordShared: false,
     message:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
   },
@@ -34,8 +35,52 @@ export const patients = [
     cid: "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM",
     info: "Male - 28 Years 03 Months",
     uniqueKey: "yshsyhsy2",
-    requestKey: "yshsyhsy3",
+    requestStatus: 1,
+    medicalRecordShared: false,
     message:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
+  },
+];
+
+export const patientsAccepted = [
+  {
+    name: "Dell Jackson",
+    appointmentType: "report",
+    time: "9.00am",
+    symptoms: ["fever", "chest pain", "infection", "dizziness"],
+    image: patient1,
+    appointmentStatus: 2,
+    appointmentId: "10",
+    patientAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
+    doctorAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
+    cid: "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM",
+    info: "Male - 28 Years 03 Months",
+    uniqueKey: "yshsyhsy1",
+    requestStatus: 1,
+    medicalRecordShared: false,
+    message:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
+    doctorMessage:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
+  },
+  {
+    name: "Sophia Moore",
+    appointmentType: "medical checkup",
+    time: "10.00am",
+    symptoms: ["cough", "catarrh", "cold"],
+    image: patient2,
+    appointmentStatus: 2,
+    appointmentId: "10",
+    patientAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
+    doctorAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
+    cid: "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM",
+    info: "Male - 28 Years 03 Months",
+    uniqueKey: "yshsyhsy2",
+    requestStatus: 1,
+    medicalRecordShared: false,
+    message:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
+    doctorMessage:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
   },
   {
@@ -51,8 +96,11 @@ export const patients = [
     cid: "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM",
     info: "Male - 28 Years 03 Months",
     uniqueKey: "yshsyhsy3",
-    requestKey: "yshsyhsy3",
+    requestStatus: 2,
+    medicalRecordShared: true,
     message:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
+    doctorMessage:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
   },
   {
@@ -68,13 +116,79 @@ export const patients = [
     cid: "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM",
     info: "Male - 28 Years 03 Months",
     uniqueKey: "yshsyhsy4",
-    requestKey: "yshsyhsy3",
+    requestStatus: 2,
+    medicalRecordShared: true,
     message:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
+    doctorMessage:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
   },
-]
+];
 
-export const doctors = []
+export const patientsPending = [
+  {
+    name: "Dell Jackson",
+    appointmentType: "report",
+    time: "9.00am",
+    symptoms: ["fever", "chest pain", "infection", "dizziness"],
+    image: patient1,
+    appointmentStatus: 1,
+    appointmentId: "10",
+    patientAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
+    doctorAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
+    cid: "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM",
+    info: "Male - 28 Years 03 Months",
+    uniqueKey: "yshsyhsy1",
+    requestStatus: 0,
+    medicalRecordShared: false,
+    message:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
+    doctorMessage:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
+  },
+  {
+    name: "Sophia Moore",
+    appointmentType: "medical checkup",
+    time: "10.00am",
+    symptoms: ["cough", "catarrh", "cold"],
+    image: patient2,
+    appointmentStatus: 1,
+    appointmentId: "10",
+    patientAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
+    doctorAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
+    cid: "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM",
+    info: "Male - 28 Years 03 Months",
+    uniqueKey: "yshsyhsy2",
+    requestStatus: 0,
+    medicalRecordShared: false,
+    message:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
+    doctorMessage:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
+  },
+  {
+    name: "Campbell Deschamp",
+    appointmentType: "weekly visit",
+    time: "2.00pm",
+    symptoms: ["fever", "chest pain", "infection", "dizziness"],
+    image: patient3,
+    appointmentStatus: 1,
+    appointmentId: "10",
+    patientAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
+    doctorAddress: "0x7e75f43853FA26f590D2f351C3C2B100E4FC329f",
+    cid: "QmR2EViJjaNJtzEkDMddVhreWVA3cFk58JkFBCwVHq41oM",
+    info: "Male - 28 Years 03 Months",
+    uniqueKey: "yshsyhsy3",
+    requestStatus: 0,
+    medicalRecordShared: false,
+    message:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
+    doctorMessage:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
+  },
+];
+
+export const doctors = [];
 
 export const records = [
   {
@@ -113,4 +227,4 @@ export const records = [
     updated: "27.01.2023",
     created: "23.01.2020",
   },
-]
+];

@@ -11,7 +11,7 @@ import {
   FormControl,
 } from "@mui/material";
 import React, { useState } from "react";
-import { useSigner } from "wagmi";
+import { useSigner, useProvider } from "wagmi";
 import { makeAppointment } from "../apis/FVMMedicare";
 import MedicationIcon from "@mui/icons-material/Medication";
 import { sendMessage } from "../apis/PushProtocol";
@@ -38,25 +38,32 @@ export const MeetADoctor = () => {
   const [message, setMessage] = useState("");
   const [appointmentType, setAppointmentType] = useState(null);
 
-  const { data: signer } = useSigner();
+  const { data: signer, isFetching } = useSigner();
+  const provider = useProvider();
 
-  const contract = useFVMMedicareContract(signer);
+  const contract = useFVMMedicareContract(provider);
 
   const sendAppointment = async () => {
-    if (!message || !appointmentType || !doctorAddress) return;
+    if (!message || !appointmentType || !doctorAddress || isFetching) return;
     const uniqueKey = v4();
-
     try {
-      const Txn = await makeAppointment(
-        contract,
+      const linkedContract = contract.connect(signer);
+      const address = await signer.getAddress();
+      const response = await sendMessage(
+        address,
+        message,
         doctorAddress,
-        uniqueKey,
-        appointmentType
+        uniqueKey
       );
-
-      await Txn.wait();
-
-      await sendMessage(signer.getAddress(), message, doctorAddress, uniqueKey);
+      if (response.status === 204) {
+        const Txn = await makeAppointment(
+          linkedContract,
+          doctorAddress,
+          uniqueKey,
+          appointmentType
+        );
+        await Txn.wait();
+      }
     } catch (e) {
       console.log(e.message);
     }
@@ -94,9 +101,12 @@ export const MeetADoctor = () => {
               value={appointmentType}
               onChange={handleSelect}
             >
-              <MenuItem value={"report"}>Report</MenuItem>
-              <MenuItem value={"lab-test"}>Lab Test</MenuItem>
-              <MenuItem value={"surgery"}>Surgery</MenuItem>
+              <MenuItem value={0}>Medical Checkup</MenuItem>
+              <MenuItem value={1}>Weekly visit</MenuItem>
+              <MenuItem value={2}>Lab Test</MenuItem>
+              <MenuItem value={3}>Surgery</MenuItem>
+              <MenuItem value={4}>Get Report</MenuItem>
+              <MenuItem value={5}>Others</MenuItem>
             </Select>
             <TextField
               label="Doctor's ID"

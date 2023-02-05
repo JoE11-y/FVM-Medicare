@@ -9,11 +9,10 @@ import {
   Button,
   FormControl,
 } from "@mui/material";
-import { useSigner } from "wagmi";
+import { useSigner, useProvider } from "wagmi";
 import { respondToAppointment } from "../apis/FVMMedicare";
 import { sendMessage } from "../apis/PushProtocol";
 import { useFVMMedicareContract } from "../hooks";
-import { v4 } from "uuid";
 
 export const AppointmentModal = ({
   appointment,
@@ -35,35 +34,35 @@ export const AppointmentModal = ({
   };
   const [message, setMessage] = useState("");
 
-  const { data: signer } = useSigner();
+  const { data: signer, isFetching } = useSigner();
 
-  const contract = useFVMMedicareContract(signer);
+  const provider = useProvider();
+
+  const contract = useFVMMedicareContract(provider);
 
   const handleResponse = async () => {
-    if (!message && !toDecline) return;
+    if (!message && !toDecline && isFetching) return;
     let response;
-
-    if (toDecline) {
-      response = 2;
-    } else {
-      response = 1;
-    }
     try {
-      const Txn = await respondToAppointment(
-        contract,
-        appointment.appointmentId,
-        response
-      );
-      await Txn.wait();
-
+      const linkedContract = contract.connect(signer);
+      const address = await signer.getAddress();
       if (!toDecline) {
-        await sendMessage(
-          signer.getAddress(),
+        response = await sendMessage(
+          address,
           message,
           appointment.patientAddress,
           appointment.uniqueKey
         );
       }
+
+      if (!toDecline && response.status !== 204) return;
+
+      const Txn = await respondToAppointment(
+        linkedContract,
+        appointment.appointmentId,
+        toDecline
+      );
+      await Txn.wait();
     } catch (e) {
       console.log(e.message);
     }
@@ -99,7 +98,7 @@ export const AppointmentModal = ({
         </div>
         <Alert severity="info" style={{ marginTop: "1rem" }}>
           <AlertTitle>Patient's message</AlertTitle>
-          {appointment.msg}
+          {appointment.message}
         </Alert>
         {!toDecline ? (
           <FormControl fullWidth>

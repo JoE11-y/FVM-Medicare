@@ -1,39 +1,54 @@
 import { Alert, AlertTitle, Button } from "@mui/material";
-import React, { useContext } from "react";
-import { useSigner } from "wagmi";
+import React from "react";
+import { useSigner, useProvider } from "wagmi";
 import { useFVMMedicareContract } from "../hooks";
 import { VideoCall } from "./VideoCall";
 import { respondToDataRequest } from "../apis/FVMMedicare";
 import { revokeAccess, shareAccess } from "../apis/Lighthouse";
 
 export const PatientAppointmentCard = ({ appointment, type }) => {
-  // const { dispatch } = useContext(appointmentSummaryContext);
-  const { data: signer } = useSigner();
-
-  const handleRevokeAction = async () => {
-    const result = await revokeAccess(
-      appointment.cid,
-      signer,
-      appointment.doctorAddress
-    );
-  };
-
-  const handleShareAction = async () => {
-    const result = await shareAccess(
-      appointment.cid,
-      signer,
-      appointment.doctorAddress
-    );
-  };
+  const provider = useProvider();
+  const { data: signer, isFetched } = useSigner();
+  const contract = useFVMMedicareContract(provider);
 
   const handleResponse = async (response) => {
-    if (!response) return;
+    if (!isFetched) return;
+    const linkedContract = contract.connect(signer);
+    try {
+      if (response) {
+        const result = await shareAccess(
+          appointment.cid,
+          signer,
+          appointment.doctorAddress
+        );
+        if (result.status === "Success") {
+          const Txn = await respondToDataRequest(
+            linkedContract,
+            appointment.appointmentId,
+            response
+          );
 
-    // try {
-    //   const Txn = await respondToDataappointment(contract. )
-    // } catch (e) {
-    //   console.log(e.message);
-    // }
+          await Txn.wait();
+        }
+      } else {
+        const result = await revokeAccess(
+          appointment.cid,
+          signer,
+          appointment.doctorAddress
+        );
+        if (result.status === "Success") {
+          const Txn = await respondToDataRequest(
+            linkedContract,
+            appointment.appointmentId,
+            response
+          );
+
+          await Txn.wait();
+        }
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
   };
 
   return (
@@ -70,36 +85,7 @@ export const PatientAppointmentCard = ({ appointment, type }) => {
         </div>
 
         <div style={{ marginTop: "1rem" }}>
-          {type === "pending" ? (
-            <div style={{ marginTop: "1rem" }}>
-              <Button
-                color="success"
-                // onClick={() => handleResponse(1)}
-              >
-                Accept
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                // onClick={() => handleResponse(2)}
-              >
-                Decline
-              </Button>
-            </div>
-          ) : // <Button
-          //   color="primary"
-          //   variant="contained"
-          // >
-          //   {/* <Link
-          //     to={`/select-records/${appointment.uniqueKey}`}
-          //     style={{ textDecoration: "none", color: "inherit" }}
-          //   >
-          //     Send Record
-          //   </Link> */}
-          //   Accept
-          // </Button>
-
-          type === "accepted" ? (
+          {type === "scheduled" ? (
             <>
               <div
                 style={{
@@ -109,16 +95,26 @@ export const PatientAppointmentCard = ({ appointment, type }) => {
                   marginBottom: "1rem",
                 }}
               >
-                <VideoCall key={appointment.uniqueKey} />
+                <VideoCall meetId={appointment.uniqueKey} />
                 <Button
                   color="primary"
                   variant="contained"
-                  // onClick={() => handleRevokeAction()}
+                  // onClick={() => handleResponse(false)}
                 >
                   Revoke Access
                 </Button>
               </div>
             </>
+          ) : type === "accepted" ? (
+            <div style={{ marginTop: "1rem" }}>
+              <Button
+                color="info"
+                variant="contained"
+                // onClick={() => handleResponse(true)}
+              >
+                Share Access
+              </Button>
+            </div>
           ) : type === "rejected" ? (
             <></>
           ) : null}

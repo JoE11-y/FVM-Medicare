@@ -3,11 +3,7 @@ import { useAccount, useProvider } from "wagmi";
 import { MeetADoctor } from "../MeetADoctor";
 import { PatientAppointments } from "../PatientAppointments";
 import { useFVMMedicareContract } from "../../hooks";
-import {
-  loadAppointments,
-  loadRequests,
-  getInformation,
-} from "../../apis/FVMMedicare";
+import { loadAppointments, getInformation } from "../../apis/FVMMedicare";
 import { patients } from "../../dummyData";
 
 export const LeftSide = () => {
@@ -17,6 +13,7 @@ export const LeftSide = () => {
   const [acceptedAppointments, setAcceptedAppointments] = useState([]);
   const [pendingAppointments, setPendingAppointments] = useState([]);
   const [rejectedAppointments, setRejectedAppointments] = useState([]);
+  const [completedAppointments, setCompleletdAppointments] = useState([]);
   const contract = useFVMMedicareContract(provider);
 
   const loadData = useCallback(async () => {
@@ -26,7 +23,9 @@ export const LeftSide = () => {
 
   const getAppointments = useCallback(async () => {
     const appointments = await loadAppointments(contract, address, false);
-    if (appointments.acceptedappointments)
+    if (appointments.completedAppointments)
+      setCompleletdAppointments(appointments.completedAppointments);
+    if (appointments.acceptedAppointments)
       setAcceptedAppointments(appointments.rejectedAppointments);
     if (appointments.pendingAppointments)
       setPendingAppointments(appointments.pendingAppointments);
@@ -54,8 +53,18 @@ export const LeftSide = () => {
         <h3 style={{ marginBottom: "1rem" }}>Call Appointments</h3>
         <div className="status">
           <PatientAppointments
-            title={"accepted appointments"}
+            title={"scheduled appointments"}
             index={1}
+            type={"scheduled"}
+            appointments={
+              completedAppointments.length !== 0
+                ? completedAppointments
+                : patients
+            }
+          />
+          <PatientAppointments
+            title={"accepted appointments"}
+            index={2}
             type={"accepted"}
             appointments={
               acceptedAppointments.length !== 0
@@ -65,7 +74,7 @@ export const LeftSide = () => {
           />
           <PatientAppointments
             title={"pending appointments"}
-            index={2}
+            index={3}
             type={"pending"}
             appointments={
               pendingAppointments.length !== 0 ? pendingAppointments : patients
@@ -73,7 +82,7 @@ export const LeftSide = () => {
           />
           <PatientAppointments
             title={"rejected appointments"}
-            index={3}
+            index={4}
             type={"rejected"}
             appointments={
               rejectedAppointments.length !== 0
