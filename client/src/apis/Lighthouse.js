@@ -1,7 +1,9 @@
 import lighthouse from "@lighthouse-web3/sdk";
 import { Base64 } from "js-base64";
 
-const API_KEY = process.env.REACT_LIGHTHOUSE_KEY;
+const API_KEY = process.env.REACT_APP_LIGHTHOUSE_KEY;
+
+console.log(API_KEY);
 
 const progressCallback = (progressData) => {
   let percentageDone =
@@ -25,43 +27,28 @@ export const uploadFile = async (e) => {
   return output;
 };
 
-export const uploadDoctorCertificate = async (e, signer) => {
-  const sig = await encryptionSignature(signer);
-  const output = await lighthouse.uploadEncrypted(
-    e,
-    API_KEY,
-    sig.publicKey,
-    sig.signedMessage,
-    progressCallback
-  );
-  return output;
-};
-
-const formatJSON = (jsonObj) => {
-  const buf = Buffer.from(JSON.stringify(jsonObj));
-  const arr = new Uint8Array(buf);
-  const b64 = Base64.fromUint8Array(arr);
-  return b64;
-};
-
 export const uploadEncryptedData = async (signer, jsonData) => {
   const sig = await encryptionSignature(signer);
-  const b64Text = formatJSON(jsonData);
-  const response = await lighthouse.textUploadEncrypted(
-    b64Text,
-    API_KEY,
+  const jsonFileEvent = jsonToFile(jsonData);
+  const response = await lighthouse.uploadEncrypted(
+    jsonFileEvent,
     sig.publicKey,
-    sig.signedMessage
+    API_KEY,
+    sig.signedMessage,
+    progressCallback
   );
   return response;
 };
 
-const formatB64 = (b64TextBuffer) => {
-  const b64 = Buffer.from(b64TextBuffer);
-  const u8arr = Base64.toUint8Array(b64);
-  const jsonBuf = Buffer.from(u8arr);
-  const jsonData = JSON.parse(jsonBuf.toString());
-  return jsonData;
+const jsonToFile = (jsonData) => {
+  const jsonString = JSON.stringify(jsonData);
+  const jsonFile = [new Blob([jsonString], { type: "text/plain" })];
+  const filedata = new File(jsonFile, "record.txt", {
+    lastModified: Date.now(),
+    type: "text/plain",
+  });
+  const event = { persist: () => {}, target: { files: [filedata] } };
+  return event;
 };
 
 export const downloadNDecryptData = async (cid, signer) => {
@@ -71,12 +58,13 @@ export const downloadNDecryptData = async (cid, signer) => {
     sig.publicKey,
     sig.signedMessage
   );
+
+  const fileType = "text/plain";
+
   const decrypted = await lighthouse.decryptFile(
     cid,
     fileEncryptionKey.data.key
   );
-  const jsonData = formatB64(decrypted);
-  return jsonData;
 };
 
 export const shareAccess = async (cid, signer, addressTo) => {

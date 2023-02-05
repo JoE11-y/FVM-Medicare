@@ -18,7 +18,7 @@ export const DoctorDashboard = () => {
   const { address } = useAccount();
   const provider = useProvider();
   const { data: signer, isFetched } = useSigner();
-  const [data, setData] = useState({});
+  const [data, setData] = useState([]);
   const [acceptedAppointments, setAcceptedAppointments] = useState([]);
   const [pendingAppointments, setPendingAppointments] = useState([]);
   const contract = useFVMMedicareContract(provider);
@@ -44,6 +44,7 @@ export const DoctorDashboard = () => {
 
   const loadData = useCallback(async () => {
     const data = await getInformation(contract, address);
+    console.log(data["hospital"]);
     setData(data);
   }, [address, contract]);
 
@@ -55,12 +56,14 @@ export const DoctorDashboard = () => {
       setPendingAppointments(appointments.pendingAppointments);
   }, [address, contract]);
 
-  useEffect(() => {
-    if (contract & !data) {
-      loadData();
-      getAppointments();
-    }
-  }, [contract, loadData, data, getAppointments]);
+  // useEffect(() => {
+  //   if (provider) {
+  //     if (data.length !== 0) return;
+  //     loadData();
+  //   }
+
+  //   // getAppointments();
+  // }, [loadData, provider, data]);
 
   return (
     <AppointmentSummaryProvider>
