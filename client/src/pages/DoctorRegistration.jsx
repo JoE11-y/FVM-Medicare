@@ -4,14 +4,14 @@ import { useSigner, useProvider } from "wagmi";
 import { useFVMMedicareContract } from "../hooks";
 import { Logo } from "../components/Logo";
 import { uploadFile, uploadEncryptedData } from "../apis/Lighthouse";
+import DatePicker from "react-date-picker";
 
 export const DoctorRegistration = () => {
   const { data: signer, isFetched } = useSigner();
   const provider = useProvider();
   const contract = useFVMMedicareContract(provider);
-
+  const [dob, setDob] = useState(new Date());
   const [name, setName] = useState("");
-  const [dob, setDob] = useState("");
   const [nationality, setNationality] = useState("");
   const [pronouns, setPronouns] = useState("");
   const [hospital, setHospital] = useState("");
@@ -21,10 +21,19 @@ export const DoctorRegistration = () => {
   const [docCID, setDocCID] = useState("");
 
   const handleFileUpload = async (e, file) => {
-    const output = await uploadFile(e);
-    if (!output.isSuccess) return;
-    if (file === "image") setImageCid(output.data.Hash);
-    if (file === "doc") setDocCID(output.data.Hash);
+    if (!isFetched) return;
+    console.log(e);
+    try {
+      const output = await uploadFile(e, signer);
+      if (!output) return;
+      if (file === "image") setImageCid(output.data.Hash);
+      if (file === "doc") {
+        setDocCID(output.data.Hash);
+      }
+      console.log(output.data.Hash);
+    } catch (e) {
+      console.log(e.message);
+    }
   };
 
   const formNotFilled = () =>
@@ -46,7 +55,7 @@ export const DoctorRegistration = () => {
       const linkedContract = contract.connect(signer);
       const data = {
         name: name,
-        dob: dob,
+        dob: dob.getTime(),
         nationality: nationality,
         pronouns: pronouns,
         hospital: hospital,
@@ -54,9 +63,10 @@ export const DoctorRegistration = () => {
         imageCid: imageCid,
         docCid: docCID,
       };
-
+      console.log(data);
       const output = await uploadEncryptedData(signer, data);
-      if (!output.isSuccess) return;
+      console.log(output);
+      if (!output) return;
       const uri = output.data.Hash;
       const Txn = await linkedContract.register(0, uri, {
         name,
@@ -67,7 +77,7 @@ export const DoctorRegistration = () => {
 
       await Txn.wait();
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
     }
   };
 
@@ -90,14 +100,9 @@ export const DoctorRegistration = () => {
               }}
               sx={{ marginBottom: "0.6rem" }}
             />
-            <TextField
-              label="Date of Birth"
-              fullWidth
-              size="small"
-              value={dob}
-              onChange={(e) => setDob(e.target.value)}
-              sx={{ marginBottom: "0.6rem" }}
-            />
+
+            <DatePicker onChange={setDob} value={dob} />
+
             <TextField
               label="Nationality"
               fullWidth
@@ -165,7 +170,7 @@ export const DoctorRegistration = () => {
               variant="contained"
               sx={{ marginTop: "1rem" }}
               disabled={formNotFilled()}
-              // onClick={() => handleDataUpload()}
+              onClick={() => handleDataUpload()}
             >
               Register
             </Button>
