@@ -1,6 +1,8 @@
 import { Alert, AlertTitle, Button } from "@mui/material";
 import React from "react";
 import { useSigner, useProvider } from "wagmi";
+import { Icon } from "@mui/material";
+import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
 import { useFVMMedicareContract } from "../hooks";
 import { VideoCall } from "./VideoCall";
 import { respondToDataRequest } from "../apis/FVMMedicare";
@@ -74,12 +76,26 @@ export const PatientAppointmentCard = ({ appointment, type }) => {
             <img src={appointment.image} alt="doctor" />
           </div>
           <div className="doctor-name">
-            <p>{appointment.name}</p>
+            <p>
+              {appointment.name}{" "}
+              <small style={{ opacity: 0.5, fontWeight: "bold" }}>
+                {appointment.specialization}
+              </small>
+            </p>
+            <Icon
+              component={LocalPharmacyIcon}
+              fontSize="small"
+              color="secondary"
+            />
+            <small style={{ opacity: 0.5, fontWeight: "bold" }}>
+              {" "}
+              {appointment.hospital}
+            </small>
           </div>
         </div>
         <div className="doctor-message">
           <Alert severity="info">
-            <AlertTitle>Doctor's appointment</AlertTitle>
+            <AlertTitle>Doctor's message</AlertTitle>
             <p>{appointment.message}</p>
           </Alert>
         </div>

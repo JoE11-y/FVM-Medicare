@@ -5,13 +5,12 @@ import { appointmentSummaryContext } from "../context";
 import { PatientRecords } from "./PatientRecords";
 
 export const PatientSummary = () => {
-  const colors = ["#ff86ff", "var(--blue)", "var(--mindaro)", "#86ffa4"];
   const [open, setOpen] = useState(false);
   const {
     state: { appointment },
   } = useContext(appointmentSummaryContext);
 
-  const { data: signer, isFetched } = useSigner();
+  // const { data: signer, isFetched } = useSigner();
 
   return (
     <div>
@@ -32,9 +31,7 @@ export const PatientSummary = () => {
           </div>
           <div className="patient-name">
             <p>{appointment?.name}</p>
-            <small style={{ opacity: 0.5, fontWeight: "bold" }}>
-              {appointment?.info}
-            </small>
+            <small style={{ opacity: 0.5, fontWeight: "bold" }}></small>
           </div>
           <small
             style={{ color: "#EF798A", fontWeight: "bold", cursor: "pointer" }}

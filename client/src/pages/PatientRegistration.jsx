@@ -1,15 +1,29 @@
-import {
-  Button,
-  FormControl,
-  Select,
-  TextField,
-  MenuItem,
-  InputLabel,
-} from "@mui/material";
-import React from "react";
+import { Button, FormControl, TextField } from "@mui/material";
+import React, { useState } from "react";
+import { useSigner, useProvider } from "wagmi";
+import { useFVMMedicareContract } from "../hooks";
 import { Logo } from "../components/Logo";
+import { uploadFile, uploadEncryptedData } from "../apis/Lighthouse";
 
 export const PatientRegistration = () => {
+  const { data: signer, isFetched } = useSigner();
+  const provider = useProvider();
+  const contract = useFVMMedicareContract(provider);
+
+  const [name, setName] = useState("");
+  const [dob, setDob] = useState("");
+  const [nationality, setNationality] = useState("");
+  const [pronouns, setPronouns] = useState("");
+  const [specialization, setSpecialization] = useState("");
+  const [location, setLocation] = useState("");
+  const [imageCid, setImageCid] = useState("");
+
+  const handleFileUpload = async (e) => {
+    const output = await uploadFile(e);
+    if (!output.isSuccess) return;
+    setImageCid(output.data.Hash);
+  };
+
   return (
     <div>
       <div className="reg-page">
@@ -24,36 +38,50 @@ export const PatientRegistration = () => {
               label="Fullname"
               fullWidth
               size="small"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
               sx={{ marginBottom: "0.6rem" }}
             />
             <TextField
               label="Date of Birth"
               fullWidth
               size="small"
+              value={dob}
+              onChange={(e) => setDob(e.target.value)}
               sx={{ marginBottom: "0.6rem" }}
             />
             <TextField
               label="Nationality"
               fullWidth
               size="small"
+              value={nationality}
+              onChange={(e) => setNationality(e.target.value)}
               sx={{ marginBottom: "0.6rem" }}
             />
             <TextField
               label="Pronouns"
               fullWidth
               size="small"
+              value={pronouns}
+              onChange={(e) => setPronouns(e.target.value)}
               sx={{ marginBottom: "0.6rem" }}
             />
             <TextField
               label="Occupation"
               fullWidth
               size="small"
+              value={specialization}
+              onChange={(e) => setSpecialization(e.target.value)}
               sx={{ marginBottom: "0.6rem" }}
             />
             <TextField
               label="Address/Location"
               fullWidth
               size="small"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
               sx={{ marginBottom: "0.6rem" }}
             />
             <TextField
@@ -82,9 +110,13 @@ export const PatientRegistration = () => {
             />
             <div>
               <label htmlFor="doctor-picture" style={{ display: "block" }}>
-                Image
+                Profile Picture
               </label>
-              <input type={"file"} id="doctor-picture" />
+              <input
+                type={"file"}
+                id="doctor-picture"
+                onChange={(e) => handleFileUpload(e)}
+              />
             </div>
 
             <Button variant="contained" sx={{ marginTop: "1rem" }}>
