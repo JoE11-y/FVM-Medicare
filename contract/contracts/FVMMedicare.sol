@@ -36,9 +36,8 @@ contract FVMMedicare is Ownable {
 
     struct BioData {
         string name;
-        string surname;
-        string birthDate;
-        string speciality;
+        string specialization;
+        string hospital;
         string image;
     }
 
