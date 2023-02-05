@@ -14,7 +14,8 @@ contract FVMMedicare is Ownable {
         NONE,
         PENDING,
         ACCEPTED,
-        REJECTED
+        REJECTED,
+        COMPLETED
     }
 
     enum Category {
@@ -135,10 +136,10 @@ contract FVMMedicare is Ownable {
             .appointmentCount;
     }
 
-    function respondToAppointment(uint256 _doctorAppointmentId, Status _response) public {
+    function respondToAppointment(uint256 _doctorAppointmentId, bool _accepted) public {
         require(
             IFVMMedicareNFT(doctorMedicareNFTAddress).isTokenHolder(msg.sender),
-            "Address is not a doctor"
+            "Access is only for doctors"
         );
 
         uint256 doctorTokenId = IFVMMedicareNFT(doctorMedicareNFTAddress).getTokenId(msg.sender);
@@ -146,8 +147,6 @@ contract FVMMedicare is Ownable {
         Appointment storage editedAppointmentDoctor = Doctors[doctorTokenId].doctorAppointments[
             _doctorAppointmentId
         ];
-
-        editedAppointmentDoctor.appointmentStatus = _response;
 
         uint256 patientTokenId = IFVMMedicareNFT(patientMedicareNFTAddress).getTokenId(
             editedAppointmentDoctor.patientAddress
@@ -161,11 +160,14 @@ contract FVMMedicare is Ownable {
             _patientAppointmentId
         ];
 
-        editedAppointmentPatient.appointmentStatus = _response;
-
-        if (_response == Status.ACCEPTED) {
+        if (_accepted) {
+            editedAppointmentDoctor.appointmentStatus = Status.ACCEPTED;
+            editedAppointmentPatient.appointmentStatus = Status.ACCEPTED;
             editedAppointmentDoctor.requestStatus = Status.PENDING;
             editedAppointmentPatient.requestStatus = Status.PENDING;
+        } else {
+            editedAppointmentDoctor.appointmentStatus = Status.REJECTED;
+            editedAppointmentPatient.appointmentStatus = Status.REJECTED;
         }
     }
 
@@ -204,6 +206,34 @@ contract FVMMedicare is Ownable {
             editedAppointmentDoctor.requestStatus = Status.PENDING;
             editedAppointmentDoctor.medicalRecordShared = false;
         }
+    }
+
+    function endAppointment(uint256 _doctorAppointmentId) public {
+        require(
+            IFVMMedicareNFT(doctorMedicareNFTAddress).isTokenHolder(msg.sender),
+            "Access is only for doctors"
+        );
+
+        uint256 doctorTokenId = IFVMMedicareNFT(doctorMedicareNFTAddress).getTokenId(msg.sender);
+
+        Appointment storage editedAppointmentDoctor = Doctors[doctorTokenId].doctorAppointments[
+            _doctorAppointmentId
+        ];
+
+        uint256 patientTokenId = IFVMMedicareNFT(patientMedicareNFTAddress).getTokenId(
+            editedAppointmentDoctor.patientAddress
+        );
+
+        uint256 _patientAppointmentId = Patients[patientTokenId].doctorToPatientAppointmentMapping[
+            _doctorAppointmentId
+        ];
+
+        Appointment storage editedAppointmentPatient = Patients[patientTokenId].patientAppointments[
+            _patientAppointmentId
+        ];
+
+        editedAppointmentDoctor.appointmentStatus = Status.COMPLETED;
+        editedAppointmentPatient.appointmentStatus = Status.COMPLETED;
     }
 
     function getInformation(address _addr) public view returns (BioData memory) {
