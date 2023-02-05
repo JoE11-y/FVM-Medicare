@@ -5,9 +5,9 @@ import {
   TextField,
   MenuItem,
   InputLabel,
-} from "@mui/material"
-import React from "react"
-import { Logo } from "../components/Logo"
+} from "@mui/material";
+import React from "react";
+import { Logo } from "../components/Logo";
 
 export const PatientRegistration = () => {
   return (
@@ -98,5 +98,5 @@ export const PatientRegistration = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

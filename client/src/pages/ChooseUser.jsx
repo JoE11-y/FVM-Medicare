@@ -1,10 +1,11 @@
-import React from "react"
-import { DesktopNav } from "../components/DesktopNav"
-import { Logo } from "../components/Logo"
-import { Icon } from "@mui/material"
-import AccountCircleIcon from "@mui/icons-material/AccountCircle"
-import MedicationIcon from "@mui/icons-material/Medication"
-import { Link } from "react-router-dom"
+import React from "react";
+import { DesktopNav } from "../components/DesktopNav";
+import { Logo } from "../components/Logo";
+import { Icon } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import MedicationIcon from "@mui/icons-material/Medication";
+import { Link } from "react-router-dom";
+import { UserIcon } from "../components/UserIcon";
 
 export const ChooseUser = () => {
   return (
@@ -14,6 +15,7 @@ export const ChooseUser = () => {
           <Logo colorTop={"#272F3F"} colorBottom={"var(--blue)"} />
           <DesktopNav style={{ borderColor: "#272F3F", color: "#272F3F" }} />
         </div>
+        <UserIcon />
       </header>
 
       <p style={{ textAlign: "center", marginTop: "3rem" }}>
@@ -38,5 +40,5 @@ export const ChooseUser = () => {
         </Link>
       </section>
     </div>
-  )
-}
+  );
+};

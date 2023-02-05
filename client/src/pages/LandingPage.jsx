@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAccount, useProvider } from "wagmi";
 import { useDoctorNFTContract, usePatientNFTContract } from "../hooks";
@@ -55,11 +55,6 @@ export const LandingPage = () => {
     }
   }, [address, navigate, doctorNFTContract, patientNFTContract]);
 
-  useEffect(() => {
-    if (isConnected) {
-      //checkUser();
-    }
-  }, [isConnected, checkUser]);
   return (
     <motion.div className="landingPage">
       <motion.div
@@ -86,9 +81,17 @@ export const LandingPage = () => {
               atque exercitationem, nesciunt iste asperiores aliquam quis. Sunt,
               vel excepturi.
             </p>
-            <Button variant="contained" sx={{ marginTop: "1rem" }}>
-              Get Started
-            </Button>
+            {isConnected ? (
+              <Button
+                variant="contained"
+                sx={{ marginTop: "1rem" }}
+                onClick={() => checkUser()}
+              >
+                Get Started
+              </Button>
+            ) : (
+              <></>
+            )}
           </motion.div>
           <motion.div className="landingBody__right" variants={container}>
             <img src={image} alt="" />
