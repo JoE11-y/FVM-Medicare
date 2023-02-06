@@ -1,7 +1,7 @@
-import patient1 from "./images/patient1.jpg"
-import patient2 from "./images/patient2.jpg"
-import patient3 from "./images/patient3.jpg"
-import patient4 from "./images/patient4.jpg"
+import patient1 from "./images/patient1.jpg";
+import patient2 from "./images/patient2.jpg";
+import patient3 from "./images/patient3.jpg";
+import patient4 from "./images/patient4.jpg";
 
 export const patients = [
   {
@@ -44,7 +44,7 @@ export const patients = [
     message:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
   },
-]
+];
 
 export const patientsAccepted = [
   {
@@ -127,7 +127,7 @@ export const patientsAccepted = [
     doctorMessage:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
   },
-]
+];
 
 export const patientsPending = [
   {
@@ -190,9 +190,9 @@ export const patientsPending = [
     doctorMessage:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
   },
-]
+];
 
-export const doctors = []
+export const doctors = [];
 
 // 0x7e75f43853FA26f590D2f351C3C2B100E4FC329f
 export const records = [
@@ -232,7 +232,7 @@ export const records = [
     updated: "27.01.2023",
     created: "23.01.2020",
   },
-]
+];
 
 export const testPatientData = {
   allergies:
@@ -261,7 +261,7 @@ export const testPatientData = {
   },
   medHistory: "Ulcer, Purging, Asthma, Hepatitis.",
   surgHistory: "Breast Surgery, Hernia repair",
-}
+};
 
 export const testPatientData_ = [
   {
@@ -286,7 +286,7 @@ export const testPatientData_ = [
   },
 
   {
-    type: "Medical Data",
+    type: "Basic Data",
     data: {
       bGroup: "O-",
 
@@ -305,4 +305,4 @@ export const testPatientData_ = [
     type: "Surgical History",
     data: "Breast Surgery, Hernia repair",
   },
-]
+];

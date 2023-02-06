@@ -73,6 +73,13 @@ export const DoctorRegistration = () => {
       console.log(output);
       if (!output) return;
       const uri = output.data.Hash;
+      console.log(0, uri, {
+        name,
+        specialization,
+        hospital,
+        image: imageCid,
+      });
+
       const Txn = await linkedContract.register(0, uri, {
         name,
         specialization,
