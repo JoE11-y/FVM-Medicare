@@ -3,6 +3,7 @@ import { AcceptAppointment } from "./AcceptAppointment";
 import { DeclineAppointment } from "./DeclineAppointment";
 import { appointmentSummaryContext } from "../context";
 import { IpfsImage } from "react-ipfs-image";
+import { BigNumber } from "ethers";
 
 export const AppointmentCard = ({ appointment, border, cursor, index }) => {
   const { dispatch } = useContext(appointmentSummaryContext);
@@ -41,7 +42,7 @@ export const AppointmentCard = ({ appointment, border, cursor, index }) => {
       <div className="patient-name">
         <p>{appointment.name}</p>
         <small style={{ opacity: 0.5 }}>
-          {type[appointment.appointmentType.toNumber()]}
+          {type[BigNumber.from(appointment.appointmentType).toNumber()]}
         </small>
       </div>
       {appointment.appointmentStatus === 2 ? (

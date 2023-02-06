@@ -1,4 +1,5 @@
 import { getUserMessage } from "./PushProtocol";
+import { BigNumber } from "ethers";
 
 export const register = async (contract, user, uri, biodata) => {
   const Txn = await contract.register(user, uri, biodata);
@@ -59,7 +60,7 @@ export const loadAppointments = async (address, contract, isDoctor = true) => {
   let rejectedAppointments = [];
   const appointmentCount = await getAppointmentCount(contract, address);
 
-  for (let i = 0; i < appointmentCount.toNumber(); i++) {
+  for (let i = 0; i < BigNumber.from(appointmentCount).toNumber(); i++) {
     let id = i + 1;
     const appointmentData = await getAppointment(contract, address, id);
     let info;
