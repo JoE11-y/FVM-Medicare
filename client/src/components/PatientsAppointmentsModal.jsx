@@ -1,7 +1,6 @@
-import React from "react"
-import { Modal } from "@mui/material"
-import { patients } from "../dummyData"
-import { PatientAppointmentList } from "./PatientAppointmentList"
+import React from "react";
+import { Modal } from "@mui/material";
+import { PatientAppointmentList } from "./PatientAppointmentList";
 
 const style = {
   position: "absolute",
@@ -14,7 +13,7 @@ const style = {
   boxShadow: 24,
   borderRadius: "10px",
   overflowY: "scroll",
-}
+};
 
 export const PatientsAppointmentsModal = ({
   open,
@@ -23,7 +22,7 @@ export const PatientsAppointmentsModal = ({
   title,
   appointments,
 }) => {
-  const data = patients
+  const data = appointments;
   return (
     <Modal open={open} onClose={handleClose}>
       <div style={style}>
@@ -58,5 +57,5 @@ export const PatientsAppointmentsModal = ({
         ) : null}
       </div>
     </Modal>
-  )
-}
+  );
+};

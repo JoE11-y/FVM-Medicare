@@ -5,26 +5,6 @@ const channelAddress = process.env.REACT_APP_CHANNEL_ADDR;
 const PK = `0x${process.env.REACT_APP_CHANNEL_PKEY}`;
 const channelSigner = new Wallet(PK);
 
-export const optUserIn = async (userAddress) => {
-  try {
-    const apiResponse = await PushAPI.channels.subscribe({
-      signer: channelSigner,
-      channelAddress: `eip155:5:${channelAddress}`, // channel address in CAIP
-      userAddress: `eip155:5:${userAddress}`, // user address in CAIP
-      onSuccess: () => {
-        console.log("opt in success");
-      },
-      onError: () => {
-        console.error("opt in error");
-      },
-      env: "staging",
-    });
-    return apiResponse?.status;
-  } catch (err) {
-    console.error("Error: ", err);
-  }
-};
-
 export const sendMessage = async (
   senderAddress,
   message,
@@ -58,13 +38,13 @@ export const sendMessage = async (
   }
 };
 
-const getNotifications = async (userAddress) => {
+export const getNotifications = async (userAddress) => {
   try {
     const notifications = await PushAPI.user.getFeeds({
       user: `eip155:5:${userAddress}`, // user address in CAIP
+      spam: true,
       env: "staging",
     });
-
     return notifications;
   } catch (err) {
     console.error("Error: ", err);
@@ -77,6 +57,7 @@ export const getUserMessage = async (
   msgUniqueKey
 ) => {
   const notifications = await getNotifications(userAddress);
+  console.log(notifications);
   let message = "";
   for (let i = 0; i < notifications.length; i++) {
     const currNotification = notifications[i];
@@ -92,6 +73,5 @@ export const getUserMessage = async (
     message = currNotification.message;
     break;
   }
-  console.log(message);
   return message;
 };

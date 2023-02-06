@@ -41,7 +41,7 @@ export const AppointmentModal = ({
   const contract = useFVMMedicareContract(provider);
 
   const handleResponse = async () => {
-    if (!message && !toDecline && isFetching) return;
+    if (!message && isFetching) return;
     let response;
     try {
       const linkedContract = contract.connect(signer);
@@ -98,7 +98,7 @@ export const AppointmentModal = ({
         </div>
         <Alert severity="info" style={{ marginTop: "1rem" }}>
           <AlertTitle>Patient's message</AlertTitle>
-          {appointment.message}
+          {appointment.patientMessage}
         </Alert>
         {!toDecline ? (
           <FormControl fullWidth>
@@ -116,8 +116,7 @@ export const AppointmentModal = ({
               fullWidth
               sx={{ marginTop: "0.7rem" }}
               size="medium"
-              onClick={() => console.log(message)}
-              // onClick={() => handleResponse()}
+              onClick={() => handleResponse()}
             >
               Request Medical Records
             </Button>
@@ -128,7 +127,7 @@ export const AppointmentModal = ({
             color="error"
             fullWidth
             sx={{ marginTop: "1rem" }}
-            // onClick={() => handleResponse()}
+            onClick={() => handleResponse()}
           >
             Decline Appointment
           </Button>

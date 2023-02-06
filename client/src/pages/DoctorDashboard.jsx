@@ -1,56 +1,55 @@
-import React, { useEffect, useCallback, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { useAccount, useProvider, useSigner } from "wagmi"
-import { DesktopNav } from "../components/DesktopNav"
-import { Logo } from "../components/Logo"
-import { UserIcon } from "../components/UserIcon"
-import { PatientSummary } from "../components/PatientSummary"
-import { AppointmentList } from "../components/AppointmentList"
-import { DoctorPendingAppointment } from "../components/DoctorPendingAppointment"
-import { AppointmentSummaryProvider } from "../context"
-import { useFVMMedicareContract, useDoctorNFTContract } from "../hooks"
-import { loadAppointments } from "../apis/FVMMedicare"
-import { downloadNDecryptData } from "../apis/Lighthouse"
-import { Loader } from "../components/Loader"
+import React, { useEffect, useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAccount, useProvider, useSigner } from "wagmi";
+import { DesktopNav } from "../components/DesktopNav";
+import { Logo } from "../components/Logo";
+import { UserIcon } from "../components/UserIcon";
+import { PatientSummary } from "../components/PatientSummary";
+import { AppointmentList } from "../components/AppointmentList";
+import { DoctorPendingAppointment } from "../components/DoctorPendingAppointment";
+import { AppointmentSummaryProvider } from "../context";
+import { useFVMMedicareContract, useDoctorNFTContract } from "../hooks";
+import { loadAppointments } from "../apis/FVMMedicare";
+import { downloadNDecryptData } from "../apis/Lighthouse";
+import { Loader } from "../components/Loader";
 
 export const DoctorDashboard = () => {
-  const navigate = useNavigate()
-  const [loading, setLoading] = useState(false)
-  const [doctorData, setDoctorData] = useState(null)
-  const { address } = useAccount()
-  const provider = useProvider()
-  const { data: signer, isFetched } = useSigner()
-  const [acceptedAppointments, setAcceptedAppointments] = useState([])
-  const [pendingAppointments, setPendingAppointments] = useState([])
-  const contract = useFVMMedicareContract(provider)
-  const nftContract = useDoctorNFTContract(provider)
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [doctorData, setDoctorData] = useState(null);
+  const { address } = useAccount();
+  const provider = useProvider();
+  const { data: signer, isFetched } = useSigner();
+  const [acceptedAppointments, setAcceptedAppointments] = useState([]);
+  const [pendingAppointments, setPendingAppointments] = useState([]);
+  const contract = useFVMMedicareContract(provider);
+  const nftContract = useDoctorNFTContract(provider);
 
   const getData = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       if (isFetched) {
-        console.log("done")
-        const nftContractLinked = nftContract.connect(signer)
-        const tokenId = await nftContractLinked.getTokenId(address)
-        const doctorCID = await nftContractLinked.tokenURI(tokenId)
-        const docData = await downloadNDecryptData(doctorCID, signer)
-        if (docData) setDoctorData(docData)
+        const nftContractLinked = nftContract.connect(signer);
+        const tokenId = await nftContractLinked.getTokenId(address);
+        const doctorCID = await nftContractLinked.tokenURI(tokenId);
+        const docData = await downloadNDecryptData(doctorCID, signer);
+        if (docData) setDoctorData(docData);
       }
     } catch (e) {
-      console.log(e.message)
-      navigate("/")
+      console.log(e.message);
+      navigate("/");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [isFetched, address, nftContract, signer, navigate])
+  }, [isFetched, address, nftContract, signer, navigate]);
 
   const getAppointments = useCallback(async () => {
-    const appointments = await loadAppointments(contract, address)
+    const appointments = await loadAppointments(contract, address);
     if (appointments.acceptedAppointments)
-      setAcceptedAppointments(appointments.rejectedAppointments)
+      setAcceptedAppointments(appointments.rejectedAppointments);
     if (appointments.pendingAppointments)
-      setPendingAppointments(appointments.pendingAppointments)
-  }, [address, contract])
+      setPendingAppointments(appointments.pendingAppointments);
+  }, [address, contract]);
 
   // useEffect(() => {
   //   let run = true;
@@ -101,5 +100,5 @@ export const DoctorDashboard = () => {
         )}
       </div>
     </AppointmentSummaryProvider>
-  )
-}
+  );
+};

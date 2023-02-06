@@ -4,61 +4,55 @@ import { MeetADoctor } from "../MeetADoctor";
 import { PatientAppointments } from "../PatientAppointments";
 import { useFVMMedicareContract } from "../../hooks";
 import { loadAppointments } from "../../apis/FVMMedicare";
-import { patients } from "../../dummyData";
 
 export const LeftSide = ({ name }) => {
   const { address } = useAccount();
   const provider = useProvider();
-  const [fetched, setFetched] = useState(false);
-  const [acceptedAppointments, setAcceptedAppointments] = useState([]);
-  const [pendingAppointments, setPendingAppointments] = useState([]);
-  const [rejectedAppointments, setRejectedAppointments] = useState([]);
-  const [completedAppointments, setCompleletdAppointments] = useState([]);
+  const [acceptedAppointments, setAcceptedAppointments] = useState(null);
+  const [pendingAppointments, setPendingAppointments] = useState(null);
+  const [rejectedAppointments, setRejectedAppointments] = useState(null);
+  const [scheduledAppointments, setCompleletdAppointments] = useState(null);
   const contract = useFVMMedicareContract(provider);
 
-  const empty = useCallback(
-    () =>
-      (acceptedAppointments.length &&
-        pendingAppointments.length &&
-        completedAppointments.length &&
-        rejectedAppointments.length) === 0,
-    [
-      completedAppointments,
-      pendingAppointments,
-      acceptedAppointments,
-      rejectedAppointments,
-    ]
-  );
-
   const getAppointments = useCallback(async () => {
-    if (fetched) return;
     try {
       const appointments = await loadAppointments(address, contract, false);
-      if (appointments.completedAppointments)
-        setCompleletdAppointments(appointments.completedAppointments);
+      if (appointments.scheduledAppointments)
+        setCompleletdAppointments(appointments.scheduledAppointments);
       if (appointments.acceptedAppointments)
         setAcceptedAppointments(appointments.rejectedAppointments);
       if (appointments.pendingAppointments)
         setPendingAppointments(appointments.pendingAppointments);
       if (appointments.rejectedAppointments)
         setRejectedAppointments(appointments.rejectedAppointments);
-      console.log("done");
-      setFetched(true);
     } catch (e) {
       console.log(e);
     }
-  }, [address, contract, fetched]);
+  }, [address, contract]);
 
   useEffect(() => {
     let run = true;
-    if (empty() && run) {
-      if (fetched) return;
+    if (
+      !(
+        acceptedAppointments ||
+        pendingAppointments ||
+        scheduledAppointments ||
+        rejectedAppointments
+      ) &&
+      run
+    ) {
       getAppointments();
     }
     return () => {
       run = false;
     };
-  }, [getAppointments, empty, fetched]);
+  }, [
+    getAppointments,
+    scheduledAppointments,
+    acceptedAppointments,
+    pendingAppointments,
+    rejectedAppointments,
+  ]);
 
   return (
     <div className="dashboard_body-left">
@@ -74,39 +68,25 @@ export const LeftSide = ({ name }) => {
             title={"scheduled appointments"}
             index={1}
             type={"scheduled"}
-            appointments={
-              completedAppointments.length !== 0
-                ? completedAppointments
-                : patients
-            }
+            appointments={scheduledAppointments ? scheduledAppointments : []}
           />
           <PatientAppointments
             title={"accepted appointments"}
             index={2}
             type={"accepted"}
-            appointments={
-              acceptedAppointments.length !== 0
-                ? acceptedAppointments
-                : patients
-            }
+            appointments={acceptedAppointments ? acceptedAppointments : []}
           />
           <PatientAppointments
             title={"pending appointments"}
             index={3}
             type={"pending"}
-            appointments={
-              pendingAppointments.length !== 0 ? pendingAppointments : patients
-            }
+            appointments={pendingAppointments ? pendingAppointments : []}
           />
           <PatientAppointments
             title={"rejected appointments"}
             index={4}
             type={"rejected"}
-            appointments={
-              rejectedAppointments.length !== 0
-                ? rejectedAppointments
-                : patients
-            }
+            appointments={rejectedAppointments ? rejectedAppointments : []}
           />
         </div>
       </div>
