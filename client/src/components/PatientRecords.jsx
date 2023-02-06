@@ -1,7 +1,6 @@
 import React from "react";
 import { Modal } from "@mui/material";
 import { Box } from "@mui/system";
-import { testPatientData_ } from "../dummyData";
 import { MedicalRecordCard } from "./MedicalRecordCard";
 
 const style = {
@@ -24,9 +23,11 @@ export const PatientRecords = ({ open, handleClose, _patientData }) => {
       <Box sx={style}>
         <h3 style={{ marginBottom: "1rem" }}>Patient Records</h3>
         <div className="medical-records">
-          {testPatientData_.map((patientData, key) => (
-            <MedicalRecordCard key={key} patientData={patientData} />
-          ))}
+          {_patientData
+            ? _patientData.map((patientData, key) => (
+                <MedicalRecordCard key={key} patientData={patientData} />
+              ))
+            : null}
         </div>
       </Box>
     </Modal>
