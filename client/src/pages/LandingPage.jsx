@@ -85,10 +85,9 @@ export const LandingPage = () => {
           <motion.div className="landingBody__left" variants={item}>
             <h2>Maximize your life expectancy</h2>
             <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sunt
-              rerum quaerat facilis in nemo neque minus sint! Sed minus maxime
-              atque exercitationem, nesciunt iste asperiores aliquam quis. Sunt,
-              vel excepturi.
+              FVM Medicare enables people to store, retrieve, and share their
+              medical records on FVM by giving our clients a mechanism to store
+              their data safely, persistently, and decentralizedly.
             </p>
             {isConnected ? (
               <LoadingButton
