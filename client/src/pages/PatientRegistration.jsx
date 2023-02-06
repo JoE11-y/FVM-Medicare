@@ -58,25 +58,31 @@ export const PatientRegistration = () => {
     if (formNotFilled && !isFetched) return;
     try {
       const linkedContract = contract.connect(signer);
-      const data = {
-        biodata: {
-          name: name,
-          dob: dob.getTime(),
-          nationality: nationality,
-          pronouns: pronouns,
-          specialization: specialization,
-          imageCid: imageCid,
+      const data = [
+        {
+          type: "Bio Data",
+          data: {
+            name: name,
+            dob: dob.getTime(),
+            nationality: nationality,
+            pronouns: pronouns,
+            specialization: specialization,
+            imageCid: imageCid,
+          },
         },
-        medData: {
-          bGroup: bGroup,
-          genotype: genotype,
-          height: height,
-          weight: weight,
+        {
+          type: "Basic Data",
+          data: {
+            bGroup: bGroup,
+            genotype: genotype,
+            height: height,
+            weight: weight,
+          },
         },
-        allergies: allergies,
-        medHistory: medHistory,
-        surgHistory: surgHistory,
-      };
+        { type: "Allergies", data: allergies },
+        { type: "Medical History", data: medHistory },
+        { type: "Surgical History", data: surgHistory },
+      ];
       const output = await uploadEncryptedData(signer, data);
       if (!output) return;
       const uri = output.data.Hash;
