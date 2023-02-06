@@ -78,9 +78,6 @@
 }
 
 @media (max-width: 1100px) {
-  .navBarIcon {
-    display: block;
-  }
   .desktop-nav {
     min-width: 40%;
   }
