@@ -51,17 +51,17 @@ export const DoctorDashboard = () => {
       setPendingAppointments(appointments.pendingAppointments);
   }, [address, contract]);
 
-  useEffect(() => {
-    let run = true;
-    if (!doctorData && run) {
-      if (loading) return;
-      getData();
-    }
+  // useEffect(() => {
+  //   let run = true;
+  //   if (!doctorData && run) {
+  //     if (loading) return;
+  //     getData();
+  //   }
 
-    return () => {
-      run = false;
-    };
-  }, [getData, doctorData, loading]);
+  //   return () => {
+  //     run = false;
+  //   };
+  // }, [getData, doctorData, loading]);
 
   return (
     <AppointmentSummaryProvider>

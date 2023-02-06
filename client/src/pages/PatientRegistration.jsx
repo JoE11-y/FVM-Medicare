@@ -1,39 +1,40 @@
-import { Button, FormControl, TextField } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
-import { useSigner, useProvider } from "wagmi";
-import { useFVMMedicareContract } from "../hooks";
-import { Logo } from "../components/Logo";
-import { uploadFile, uploadEncryptedData } from "../apis/Lighthouse";
-import DatePicker from "react-date-picker";
+import { Button, FormControl, TextField } from "@mui/material"
+import React, { useState } from "react"
+import { useSigner, useProvider } from "wagmi"
+import { useFVMMedicareContract } from "../hooks"
+import { Logo } from "../components/Logo"
+import img from "../images/patient.jpg"
+import { uploadFile, uploadEncryptedData } from "../apis/Lighthouse"
+import DatePicker from "react-date-picker"
+import { useNavigate } from "react-router-dom"
 
 export const PatientRegistration = () => {
-  const { data: signer, isFetched } = useSigner();
-  const provider = useProvider();
-  const navigate = useNavigate();
-  const contract = useFVMMedicareContract(provider);
+  const { data: signer, isFetched } = useSigner()
+  const provider = useProvider()
+  const navigate = useNavigate()
+  const contract = useFVMMedicareContract(provider)
 
-  const [name, setName] = useState("");
-  const [dob, setDob] = useState("");
-  const [nationality, setNationality] = useState("");
-  const [pronouns, setPronouns] = useState("");
-  const [specialization, setSpecialization] = useState("");
-  const [location, setLocation] = useState("");
-  const [imageCid, setImageCid] = useState("");
-  const [bGroup, setBGroup] = useState("");
-  const [genotype, setGenotype] = useState("");
-  const [height, setHeight] = useState("");
-  const [weight, setWeight] = useState("");
-  const [allergies, setAllergies] = useState("");
-  const [medHistory, setMedHistory] = useState("");
-  const [surgHistory, setSurgHistory] = useState("");
+  const [name, setName] = useState("")
+  const [dob, setDob] = useState("")
+  const [nationality, setNationality] = useState("")
+  const [pronouns, setPronouns] = useState("")
+  const [specialization, setSpecialization] = useState("")
+  const [location, setLocation] = useState("")
+  const [imageCid, setImageCid] = useState("")
+  const [bGroup, setBGroup] = useState("")
+  const [genotype, setGenotype] = useState("")
+  const [height, setHeight] = useState("")
+  const [weight, setWeight] = useState("")
+  const [allergies, setAllergies] = useState("")
+  const [medHistory, setMedHistory] = useState("")
+  const [surgHistory, setSurgHistory] = useState("")
 
   const handleFileUpload = async (e) => {
-    if (!isFetched) return;
-    const output = await uploadFile(e);
-    if (!output) return;
-    setImageCid(output.data.Hash);
-  };
+    if (!isFetched) return
+    const output = await uploadFile(e)
+    if (!output) return
+    setImageCid(output.data.Hash)
+  }
 
   const formNotFilled = () =>
     !(
@@ -51,12 +52,12 @@ export const PatientRegistration = () => {
       allergies &&
       medHistory &&
       surgHistory
-    );
+    )
 
   const handleDataUpload = async () => {
-    if (formNotFilled && !isFetched) return;
+    if (formNotFilled && !isFetched) return
     try {
-      const linkedContract = contract.connect(signer);
+      const linkedContract = contract.connect(signer)
       const data = {
         biodata: {
           name: name,
@@ -75,24 +76,24 @@ export const PatientRegistration = () => {
         allergies: allergies,
         medHistory: medHistory,
         surgHistory: surgHistory,
-      };
-      const output = await uploadEncryptedData(signer, data);
-      if (!output) return;
-      const uri = output.data.Hash;
+      }
+      const output = await uploadEncryptedData(signer, data)
+      if (!output) return
+      const uri = output.data.Hash
       const Txn = await linkedContract.register(1, uri, {
         name,
         specialization,
         hospital: "",
         image: imageCid,
-      });
+      })
 
-      await Txn.wait();
+      await Txn.wait()
 
-      navigate("/patient-dashboard");
+      navigate("/patient-dashboard")
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
-  };
+  }
 
   return (
     <div>
@@ -110,7 +111,7 @@ export const PatientRegistration = () => {
               size="small"
               value={name}
               onChange={(e) => {
-                setName(e.target.value);
+                setName(e.target.value)
               }}
               sx={{ marginBottom: "0.6rem" }}
             />
@@ -234,11 +235,10 @@ export const PatientRegistration = () => {
             </Button>
           </FormControl>
         </div>
-        <div className="reg-ball">
-          <div className="ball"></div>
-          <div className="blur-ball"></div>
+        <div className="reg-img">
+          <img src={img} alt="" />
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

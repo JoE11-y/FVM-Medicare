@@ -42,9 +42,6 @@ export const DoctorRegistration = () => {
       console.log(output.data.Hash);
     } catch (e) {
       console.log(e.message);
-    } finally {
-      // setLoading1(false);
-      // setLoading2(false);
     }
   };
 
@@ -202,9 +199,8 @@ export const DoctorRegistration = () => {
             </LoadingButton>
           </FormControl>
         </div>
-        <div className="reg-ball">
-          <div className="ball"></div>
-          <div className="blur-ball"></div>
+        <div className="reg-img">
+          <img src={img} alt="" />
         </div>
       </div>
     </div>
