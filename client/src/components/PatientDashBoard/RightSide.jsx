@@ -2,7 +2,7 @@ import React from "react";
 import { MedicalRecordCard } from "../MedicalRecordCard";
 import { records } from "../../dummyData";
 
-export const RightSide = () => {
+export const RightSide = ({ patientData }) => {
   return (
     <div className="dashboard_body-right">
       <div>

@@ -59,7 +59,7 @@ export const loadAppointments = async (address, contract, isDoctor = true) => {
   let rejectedAppointments = [];
   const appointmentCount = await getAppointmentCount(contract, address);
 
-  for (let i = 0; i < Number(appointmentCount); i++) {
+  for (let i = 0; i < appointmentCount.toNumber(); i++) {
     const appointmentData = await getAppointment(contract, address, i);
     let info;
     let message;

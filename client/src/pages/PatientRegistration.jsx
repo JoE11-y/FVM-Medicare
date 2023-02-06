@@ -1,29 +1,98 @@
-import { Button, FormControl, TextField } from "@mui/material"
-import React, { useState } from "react"
-import { useSigner, useProvider } from "wagmi"
-import { useFVMMedicareContract } from "../hooks"
-import { Logo } from "../components/Logo"
-import { uploadFile, uploadEncryptedData } from "../apis/Lighthouse"
-import DatePicker from "react-date-picker"
+import { Button, FormControl, TextField } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useSigner, useProvider } from "wagmi";
+import { useFVMMedicareContract } from "../hooks";
+import { Logo } from "../components/Logo";
+import { uploadFile, uploadEncryptedData } from "../apis/Lighthouse";
+import DatePicker from "react-date-picker";
 
 export const PatientRegistration = () => {
-  const { data: signer, isFetched } = useSigner()
-  const provider = useProvider()
-  const contract = useFVMMedicareContract(provider)
+  const { data: signer, isFetched } = useSigner();
+  const provider = useProvider();
+  const navigate = useNavigate();
+  const contract = useFVMMedicareContract(provider);
 
-  const [name, setName] = useState("")
-  const [dob, setDob] = useState("")
-  const [nationality, setNationality] = useState("")
-  const [pronouns, setPronouns] = useState("")
-  const [specialization, setSpecialization] = useState("")
-  const [location, setLocation] = useState("")
-  const [imageCid, setImageCid] = useState("")
+  const [name, setName] = useState("");
+  const [dob, setDob] = useState("");
+  const [nationality, setNationality] = useState("");
+  const [pronouns, setPronouns] = useState("");
+  const [specialization, setSpecialization] = useState("");
+  const [location, setLocation] = useState("");
+  const [imageCid, setImageCid] = useState("");
+  const [bGroup, setBGroup] = useState("");
+  const [genotype, setGenotype] = useState("");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [allergies, setAllergies] = useState("");
+  const [medHistory, setMedHistory] = useState("");
+  const [surgHistory, setSurgHistory] = useState("");
 
   const handleFileUpload = async (e) => {
-    const output = await uploadFile(e)
-    if (!output.isSuccess) return
-    setImageCid(output.data.Hash)
-  }
+    if (!isFetched) return;
+    const output = await uploadFile(e);
+    if (!output) return;
+    setImageCid(output.data.Hash);
+  };
+
+  const formNotFilled = () =>
+    !(
+      name &&
+      dob &&
+      nationality &&
+      pronouns &&
+      location &&
+      specialization &&
+      imageCid &&
+      bGroup &&
+      genotype &&
+      height &&
+      weight &&
+      allergies &&
+      medHistory &&
+      surgHistory
+    );
+
+  const handleDataUpload = async () => {
+    if (formNotFilled && !isFetched) return;
+    try {
+      const linkedContract = contract.connect(signer);
+      const data = {
+        biodata: {
+          name: name,
+          dob: dob.getTime(),
+          nationality: nationality,
+          pronouns: pronouns,
+          specialization: specialization,
+          imageCid: imageCid,
+        },
+        medData: {
+          bGroup: bGroup,
+          genotype: genotype,
+          height: height,
+          weight: weight,
+        },
+        allergies: allergies,
+        medHistory: medHistory,
+        surgHistory: surgHistory,
+      };
+      const output = await uploadEncryptedData(signer, data);
+      if (!output) return;
+      const uri = output.data.Hash;
+      const Txn = await linkedContract.register(1, uri, {
+        name,
+        specialization,
+        hospital: "",
+        image: imageCid,
+      });
+
+      await Txn.wait();
+
+      navigate("/patient-dashboard");
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <div>
@@ -41,7 +110,7 @@ export const PatientRegistration = () => {
               size="small"
               value={name}
               onChange={(e) => {
-                setName(e.target.value)
+                setName(e.target.value);
               }}
               sx={{ marginBottom: "0.6rem" }}
             />
@@ -88,44 +157,58 @@ export const PatientRegistration = () => {
               label="Blood Group"
               fullWidth
               size="small"
+              value={bGroup}
+              onChange={(e) => setBGroup(e.target.value)}
               sx={{ marginBottom: "0.6rem" }}
             />
             <TextField
               label="Genotype"
               fullWidth
               size="small"
+              value={genotype}
+              onChange={(e) => setGenotype(e.target.value)}
               sx={{ marginBottom: "0.6rem" }}
             />
             <TextField
               label="Height"
               fullWidth
               size="small"
+              value={height}
+              onChange={(e) => setHeight(e.target.value)}
               sx={{ marginBottom: "0.6rem" }}
             />
             <TextField
               label="Weight"
               fullWidth
               size="small"
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
               sx={{ marginBottom: "0.6rem" }}
             />
             <TextField
               label="Known Allergies"
               fullWidth
-              size="small"
+              size="large"
+              value={allergies}
+              onChange={(e) => setAllergies(e.target.value)}
               sx={{ marginBottom: "0.6rem" }}
               multiline
             />
             <TextField
               label="Past Medical History"
               fullWidth
-              size="small"
+              size="large"
+              value={medHistory}
+              onChange={(e) => setMedHistory(e.target.value)}
               sx={{ marginBottom: "0.6rem" }}
               multiline
             />
             <TextField
               label="Past Surgical History"
               fullWidth
-              size="small"
+              size="large"
+              value={surgHistory}
+              onChange={(e) => setSurgHistory(e.target.value)}
               sx={{ marginBottom: "0.6rem" }}
               multiline
             />
@@ -141,7 +224,12 @@ export const PatientRegistration = () => {
               />
             </div>
 
-            <Button variant="contained" sx={{ marginTop: "1rem" }}>
+            <Button
+              variant="contained"
+              sx={{ marginTop: "1rem" }}
+              disabled={formNotFilled()}
+              onClick={() => handleDataUpload()}
+            >
               Register
             </Button>
           </FormControl>
@@ -152,5 +240,5 @@ export const PatientRegistration = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

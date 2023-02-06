@@ -1,9 +1,6 @@
 import lighthouse from "@lighthouse-web3/sdk";
-import { Base64 } from "js-base64";
 
 const API_KEY = process.env.REACT_APP_LIGHTHOUSE_KEY;
-
-console.log(API_KEY);
 
 const progressCallback = (progressData) => {
   let percentageDone =
@@ -51,6 +48,11 @@ const jsonToFile = (jsonData) => {
   return event;
 };
 
+const fromBlobToJson = async (blobData) => {
+  const data = JSON.parse(await blobData.text());
+  return data;
+};
+
 export const downloadNDecryptData = async (cid, signer) => {
   const sig = await encryptionSignature(signer);
   const fileEncryptionKey = await lighthouse.fetchEncryptionKey(
@@ -63,8 +65,13 @@ export const downloadNDecryptData = async (cid, signer) => {
 
   const decrypted = await lighthouse.decryptFile(
     cid,
-    fileEncryptionKey.data.key
+    fileEncryptionKey.data.key,
+    fileType
   );
+
+  const jsonData = await fromBlobToJson(decrypted);
+
+  return jsonData;
 };
 
 export const shareAccess = async (cid, signer, addressTo) => {

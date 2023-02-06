@@ -232,3 +232,32 @@ export const records = [
     created: "23.01.2020",
   },
 ];
+
+export const testPatientData = {
+  allergies:
+    "Tree and grass pollen (hay fever), house dust mites, foods, such as peanuts, milk and eggs (food allergy), animal fur, particularly from pets like cats and dogs, insect stings, such as bee and wasp stings.",
+  biodata: {
+    dob: 884214000000,
+
+    imageCid: "QmU5QpWL3NAxax7NiQtQnFFeav76T2D78a2am3MNbY7dV2",
+
+    name: "Test Patient",
+
+    nationality: "Jamaican",
+
+    pronouns: "He/Him",
+
+    specialization: "Engineer",
+  },
+  medData: {
+    bGroup: "O-",
+
+    genotype: "AS",
+
+    height: "180",
+
+    weight: "67",
+  },
+  medHistory: "Ulcer, Purging, Asthma, Hepatitis.",
+  surgHistory: "Breast Surgery, Hernia repair",
+};

@@ -31,7 +31,7 @@ export const PatientRecords = ({ open, handleClose, appointment }) => {
 
   const provider = useProvider();
 
-  const { data: signer, isFetched } = useSigner();
+  const { data: signer, isFetched, isFetching } = useSigner();
 
   const patientNftContract = usePatientNFTContract(provider);
 
@@ -47,9 +47,11 @@ export const PatientRecords = ({ open, handleClose, appointment }) => {
     }
   }, []);
 
-  useEffect(() => {
-    // getPatientRecord();
-  }, [getPatientRecord]);
+  // useEffect(() => {
+  //   if (!isFetching) {
+  //     getPatientRecord();
+  //   }
+  // }, [getPatientRecord, isFetching]);
 
   return (
     <Modal open={open} onClose={handleClose}>

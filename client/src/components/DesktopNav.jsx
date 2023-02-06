@@ -1,5 +1,5 @@
-import React from "react"
-import { Link } from "react-router-dom"
+import React from "react";
+import { Link } from "react-router-dom";
 
 export const DesktopNav = ({ style }) => {
   return (
@@ -10,15 +10,15 @@ export const DesktopNav = ({ style }) => {
         </Link>
       </li>
       <li>
-        <Link to={"/patient-dashboard"} style={style}>
+        <a
+          href={`https://github.com/JoE11-y/FVM-Medicare/blob/master/client/README.md`}
+          target="_blank"
+          rel="noreferrer"
+          style={style}
+        >
           Documentation
-        </Link>
-      </li>
-      <li>
-        <Link to={"/doctor-dashboard"} style={style}>
-          about
-        </Link>
+        </a>
       </li>
     </ul>
-  )
-}
+  );
+};
