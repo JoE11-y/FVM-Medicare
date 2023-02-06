@@ -101,3 +101,15 @@
 .pending-appointments .appointment-time {
   background-color: #fff;
 }
+
+@media (max-width: 1200px) {
+  .doctor-view {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .doctor-view {
+    grid-template-columns: 1fr;
+  }
+}
