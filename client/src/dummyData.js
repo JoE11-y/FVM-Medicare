@@ -1,7 +1,7 @@
-import patient1 from "./images/patient1.jpg";
-import patient2 from "./images/patient2.jpg";
-import patient3 from "./images/patient3.jpg";
-import patient4 from "./images/patient4.jpg";
+import patient1 from "./images/patient1.jpg"
+import patient2 from "./images/patient2.jpg"
+import patient3 from "./images/patient3.jpg"
+import patient4 from "./images/patient4.jpg"
 
 export const patients = [
   {
@@ -44,7 +44,7 @@ export const patients = [
     message:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
   },
-];
+]
 
 export const patientsAccepted = [
   {
@@ -127,7 +127,7 @@ export const patientsAccepted = [
     doctorMessage:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
   },
-];
+]
 
 export const patientsPending = [
   {
@@ -190,9 +190,9 @@ export const patientsPending = [
     doctorMessage:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. A facilis iure unde voluptatem autem explicabo! Hic voluptatum explicabo tenetur facilis distinctio eaque, modi minima dicta fuga libero veritatis nostrum eum?",
   },
-];
+]
 
-export const doctors = [];
+export const doctors = []
 
 export const records = [
   {
@@ -231,4 +231,77 @@ export const records = [
     updated: "27.01.2023",
     created: "23.01.2020",
   },
-];
+]
+
+export const testPatientData = {
+  allergies:
+    "Tree and grass pollen (hay fever), house dust mites, foods, such as peanuts, milk and eggs (food allergy), animal fur, particularly from pets like cats and dogs, insect stings, such as bee and wasp stings.",
+  biodata: {
+    dob: 884214000000,
+
+    imageCid: "QmU5QpWL3NAxax7NiQtQnFFeav76T2D78a2am3MNbY7dV2",
+
+    name: "Test Patient",
+
+    nationality: "Jamaican",
+
+    pronouns: "He/Him",
+
+    specialization: "Engineer",
+  },
+  medData: {
+    bGroup: "O-",
+
+    genotype: "AS",
+
+    height: "180",
+
+    weight: "67",
+  },
+  medHistory: "Ulcer, Purging, Asthma, Hepatitis.",
+  surgHistory: "Breast Surgery, Hernia repair",
+}
+
+export const testPatientData_ = [
+  {
+    type: "Bio Data",
+    data: {
+      dob: 884214000000,
+
+      imageCid: "QmU5QpWL3NAxax7NiQtQnFFeav76T2D78a2am3MNbY7dV2",
+
+      name: "Test Patient",
+
+      nationality: "Jamaican",
+
+      pronouns: "He/Him",
+
+      specialization: "Engineer",
+    },
+  },
+  {
+    type: "Allergies",
+    data: "Tree and grass pollen (hay fever), house dust mites, foods, such as peanuts, milk and eggs (food allergy), animal fur, particularly from pets like cats and dogs, insect stings, such as bee and wasp stings.",
+  },
+
+  {
+    type: "Medical Data",
+    data: {
+      bGroup: "O-",
+
+      genotype: "AS",
+
+      height: "180",
+
+      weight: "67",
+    },
+  },
+  {
+    type: "Medical History",
+    data: "Ulcer, Purging, Asthma, Hepatitis.",
+  },
+  {
+    type: "Surgical History",
+    data: "Breast Surgery, Hernia repair",
+  },
+]

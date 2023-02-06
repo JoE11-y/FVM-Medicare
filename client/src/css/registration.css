@@ -20,3 +20,15 @@
   width: 80%;
   margin: auto;
 }
+
+@media (max-width: 900px) {
+  .reg-page {
+    grid-template-columns: 1fr;
+  }
+  .reg-img {
+    display: none;
+  }
+  .reg-form {
+    width: 95%;
+  }
+}

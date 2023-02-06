@@ -6,8 +6,10 @@ import { Logo } from "../components/Logo"
 import img from "../images/doctor.jpg"
 import { uploadFile, uploadEncryptedData } from "../apis/Lighthouse"
 import DatePicker from "react-date-picker"
+import { useNavigate } from "react-router-dom"
 
 export const DoctorRegistration = () => {
+  const navigate = useNavigate()
   const { data: signer, isFetched } = useSigner()
   const provider = useProvider()
   const contract = useFVMMedicareContract(provider)
@@ -77,6 +79,8 @@ export const DoctorRegistration = () => {
       })
 
       await Txn.wait()
+
+      navigate("/doctor-dashboard")
     } catch (e) {
       console.log(e)
     }

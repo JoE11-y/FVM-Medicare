@@ -3,49 +3,67 @@ import { useAccount, useProvider } from "wagmi";
 import { MeetADoctor } from "../MeetADoctor";
 import { PatientAppointments } from "../PatientAppointments";
 import { useFVMMedicareContract } from "../../hooks";
-import { loadAppointments, getInformation } from "../../apis/FVMMedicare";
+import { loadAppointments } from "../../apis/FVMMedicare";
 import { patients } from "../../dummyData";
 
-export const LeftSide = () => {
+export const LeftSide = ({ name }) => {
   const { address } = useAccount();
   const provider = useProvider();
-  const [data, setData] = useState({});
+  const [fetched, setFetched] = useState(false);
   const [acceptedAppointments, setAcceptedAppointments] = useState([]);
   const [pendingAppointments, setPendingAppointments] = useState([]);
   const [rejectedAppointments, setRejectedAppointments] = useState([]);
   const [completedAppointments, setCompleletdAppointments] = useState([]);
   const contract = useFVMMedicareContract(provider);
 
-  const loadData = useCallback(async () => {
-    const data = await getInformation(contract, address);
-    setData(data);
-  }, [address, contract]);
+  const empty = useCallback(
+    () =>
+      (acceptedAppointments.length &&
+        pendingAppointments.length &&
+        completedAppointments.length &&
+        rejectedAppointments.length) === 0,
+    [
+      completedAppointments,
+      pendingAppointments,
+      acceptedAppointments,
+      rejectedAppointments,
+    ]
+  );
 
   const getAppointments = useCallback(async () => {
-    const appointments = await loadAppointments(contract, address, false);
-    if (appointments.completedAppointments)
-      setCompleletdAppointments(appointments.completedAppointments);
-    if (appointments.acceptedAppointments)
-      setAcceptedAppointments(appointments.rejectedAppointments);
-    if (appointments.pendingAppointments)
-      setPendingAppointments(appointments.pendingAppointments);
-    if (appointments.rejectedAppointments)
-      setRejectedAppointments(appointments.rejectedAppointments);
-  }, [address, contract]);
+    if (fetched) return;
+    try {
+      const appointments = await loadAppointments(address, contract, false);
+      if (appointments.completedAppointments)
+        setCompleletdAppointments(appointments.completedAppointments);
+      if (appointments.acceptedAppointments)
+        setAcceptedAppointments(appointments.rejectedAppointments);
+      if (appointments.pendingAppointments)
+        setPendingAppointments(appointments.pendingAppointments);
+      if (appointments.rejectedAppointments)
+        setRejectedAppointments(appointments.rejectedAppointments);
+      console.log("done");
+      setFetched(true);
+    } catch (e) {
+      console.log(e);
+    }
+  }, [address, contract, fetched]);
 
   useEffect(() => {
-    if (contract & !data) {
-      loadData();
+    let run = true;
+    if (empty() && run) {
+      if (fetched) return;
       getAppointments();
     }
-  }, [contract, loadData, getAppointments, data]);
+    return () => {
+      run = false;
+    };
+  }, [getAppointments, empty, fetched]);
 
   return (
     <div className="dashboard_body-left">
-      <h2>Welcome Back</h2>
-      <h2>
-        {data.userSurname}, {data.firstName}
-      </h2>
+      <h3>Welcome Back</h3>
+      <h3>{name}</h3>
       <div style={{ marginTop: "1.5rem" }}>
         <MeetADoctor />
       </div>
