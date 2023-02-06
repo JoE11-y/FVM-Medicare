@@ -18,18 +18,21 @@ export const DoctorDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [doctorData, setDoctorData] = useState(null);
   const { address } = useAccount();
+  const [curAddress, setCurrAddress] = useState("");
   const provider = useProvider();
   const { data: signer, isFetched } = useSigner();
-  const [acceptedAppointments, setAcceptedAppointments] = useState([]);
-  const [pendingAppointments, setPendingAppointments] = useState([]);
-  const contract = useFVMMedicareContract(provider);
+  const [acceptedAppointments, setAcceptedAppointments] = useState(null);
+  const [pendingAppointments, setPendingAppointments] = useState(null);
   const nftContract = useDoctorNFTContract(provider);
+
+  const contract = useFVMMedicareContract(provider);
 
   const getData = useCallback(async () => {
     setLoading(true);
     try {
       if (isFetched) {
         const nftContractLinked = nftContract.connect(signer);
+        setCurrAddress(address);
         const tokenId = await nftContractLinked.getTokenId(address);
         const doctorCID = await nftContractLinked.tokenURI(tokenId);
         const docData = await downloadNDecryptData(doctorCID, signer);
@@ -44,24 +47,43 @@ export const DoctorDashboard = () => {
   }, [isFetched, address, nftContract, signer, navigate]);
 
   const getAppointments = useCallback(async () => {
-    const appointments = await loadAppointments(contract, address);
+    const appointments = await loadAppointments(address, contract);
     if (appointments.acceptedAppointments)
-      setAcceptedAppointments(appointments.rejectedAppointments);
+      setAcceptedAppointments(appointments.acceptedAppointments);
     if (appointments.pendingAppointments)
       setPendingAppointments(appointments.pendingAppointments);
   }, [address, contract]);
 
-  // useEffect(() => {
-  //   let run = true;
-  //   if (!doctorData && run) {
-  //     if (loading) return;
-  //     getData();
-  //   }
+  useEffect(() => {
+    let run = true;
+    if (!doctorData && run) {
+      if (loading) return;
+      getData();
+    }
 
-  //   return () => {
-  //     run = false;
-  //   };
-  // }, [getData, doctorData, loading]);
+    if (!acceptedAppointments && !pendingAppointments && run) {
+      // if (!doctorData) return;
+      getAppointments();
+    }
+
+    if (doctorData) {
+      if (curAddress !== address && run) navigate("/");
+    }
+
+    return () => {
+      run = false;
+    };
+  }, [
+    getData,
+    doctorData,
+    loading,
+    acceptedAppointments,
+    pendingAppointments,
+    getAppointments,
+    address,
+    curAddress,
+    navigate,
+  ]);
 
   return (
     <AppointmentSummaryProvider>
@@ -90,10 +112,16 @@ export const DoctorDashboard = () => {
               </p>
             </div>
             <div className="doctor-view">
-              <AppointmentList acceptedAppointments={acceptedAppointments} />
+              <AppointmentList
+                acceptedAppointments={
+                  acceptedAppointments ? acceptedAppointments : []
+                }
+              />
               <PatientSummary />
               <DoctorPendingAppointment
-                pendingAppointments={pendingAppointments}
+                pendingAppointments={
+                  pendingAppointments ? pendingAppointments : []
+                }
               />
             </div>
           </section>

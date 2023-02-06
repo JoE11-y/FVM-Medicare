@@ -96,6 +96,8 @@ export const LandingPage = () => {
                 sx={{ marginTop: "1rem" }}
                 onClick={() => checkUser()}
                 loading={loading}
+                className="btn btn-glow"
+                color="error"
               >
                 Get Started
               </LoadingButton>

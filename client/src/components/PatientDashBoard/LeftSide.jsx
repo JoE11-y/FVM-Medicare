@@ -20,7 +20,7 @@ export const LeftSide = ({ name }) => {
       if (appointments.scheduledAppointments)
         setCompleletdAppointments(appointments.scheduledAppointments);
       if (appointments.acceptedAppointments)
-        setAcceptedAppointments(appointments.rejectedAppointments);
+        setAcceptedAppointments(appointments.acceptedAppointments);
       if (appointments.pendingAppointments)
         setPendingAppointments(appointments.pendingAppointments);
       if (appointments.rejectedAppointments)

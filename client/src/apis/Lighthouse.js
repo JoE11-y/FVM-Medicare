@@ -1,4 +1,5 @@
 import lighthouse from "@lighthouse-web3/sdk";
+import axios from "axios";
 
 const API_KEY = process.env.REACT_APP_LIGHTHOUSE_KEY;
 
@@ -22,6 +23,12 @@ const encryptionSignature = async (signer) => {
 export const uploadFile = async (e) => {
   const output = await lighthouse.upload(e, API_KEY, progressCallback);
   return output;
+};
+
+export const downloadFile = async (cid) => {
+  if (!cid) return;
+  const res = await axios.get(`https://gateway.lighthouse.storage/ipfs/${cid}`);
+  return res.data;
 };
 
 export const uploadEncryptedData = async (signer, jsonData) => {
@@ -79,7 +86,7 @@ export const shareAccess = async (cid, signer, addressTo) => {
 
   const shareResponse = await lighthouse.shareFile(
     sig.publicKey,
-    addressTo,
+    [addressTo],
     cid,
     sig.signedMessage
   );
@@ -92,7 +99,7 @@ export const revokeAccess = async (cid, signer, addressFrom) => {
 
   const revokeResponse = await lighthouse.revokeFileAccess(
     sig.publicKey,
-    addressFrom,
+    [addressFrom],
     cid,
     sig.signedMessage
   );

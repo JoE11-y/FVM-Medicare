@@ -1,29 +1,40 @@
-import { Alert, AlertTitle, Button } from "@mui/material";
-import React from "react";
+import { Alert, AlertTitle } from "@mui/material";
+import React, { useState } from "react";
+import { IpfsImage } from "react-ipfs-image";
 import { useSigner, useProvider } from "wagmi";
 import { Icon } from "@mui/material";
 import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
-import { useFVMMedicareContract } from "../hooks";
+import { useFVMMedicareContract, usePatientNFTContract } from "../hooks";
 import { VideoCall } from "./VideoCall";
 import { respondToDataRequest } from "../apis/FVMMedicare";
 import { revokeAccess, shareAccess } from "../apis/Lighthouse";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 export const PatientAppointmentCard = ({ appointment, type }) => {
   const provider = useProvider();
   const { data: signer, isFetched } = useSigner();
+  const [loading, setLoading] = useState(false);
   const contract = useFVMMedicareContract(provider);
 
+  const nftContract = usePatientNFTContract(provider);
+
   const handleResponse = async (response) => {
+    setLoading(true);
     if (!isFetched) return;
     const linkedContract = contract.connect(signer);
+    const nftContractLinked = nftContract.connect(signer);
+    const address = await signer.getAddress();
+    const tokenId = await nftContractLinked.getTokenId(address);
+    const cid = await nftContractLinked.tokenURI(tokenId);
+
     try {
       if (response) {
         const result = await shareAccess(
-          appointment.cid,
+          cid,
           signer,
           appointment.doctorAddress
         );
-        if (result.status === "Success") {
+        if (result) {
           const Txn = await respondToDataRequest(
             linkedContract,
             appointment.appointmentId,
@@ -50,6 +61,8 @@ export const PatientAppointmentCard = ({ appointment, type }) => {
       }
     } catch (e) {
       console.log(e.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,16 +79,26 @@ export const PatientAppointmentCard = ({ appointment, type }) => {
       >
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 8fr",
+            display: "flex",
             alignItems: "center",
             marginBottom: "1rem",
           }}
         >
           <div className="appointment-img">
-            <img src={appointment.image} alt="doctor" />
+            <IpfsImage
+              hash={
+                appointment.image
+                  ? appointment.image
+                  : "Qme8SriYgGNoXQzG1qYYZKThv3QTBf7pMJwUpu3gqaqQRH"
+              }
+              gatewayUrl={
+                appointment.image
+                  ? "https://gateway.lighthouse.storage/ipfs"
+                  : "https://gateway.pinata.cloud/ipfs"
+              }
+            />
           </div>
-          <div className="doctor-name">
+          <div className="doctor-name" style={{ marginLeft: "0rem" }}>
             <p>
               {appointment.name}{" "}
               <small style={{ opacity: 0.5, fontWeight: "bold" }}>
@@ -94,7 +117,8 @@ export const PatientAppointmentCard = ({ appointment, type }) => {
           </div>
         </div>
         <div className="doctor-message">
-          {appointment.appointmentStatus === 1 ? (
+          {appointment.appointmentStatus === 1 ||
+          appointment.appointmentStatus === 3 ? (
             <Alert severity="info">
               <AlertTitle>Your message</AlertTitle>
               <p>{appointment.patientMessage}</p>
@@ -115,29 +139,32 @@ export const PatientAppointmentCard = ({ appointment, type }) => {
                   display: "grid",
                   gridTemplateColumns: "3fr 3fr",
                   alignItems: "center",
+                  margin: "auto",
                   marginBottom: "1rem",
-                  width: "100%",
+                  width: "70%",
                 }}
               >
                 <VideoCall meetId={appointment.uniqueKey} />
-                <Button
+                <LoadingButton
                   color="primary"
                   variant="contained"
                   onClick={() => handleResponse(false)}
+                  loading={loading}
                 >
                   Revoke Access
-                </Button>
+                </LoadingButton>
               </div>
             </>
           ) : type === "accepted" ? (
             <div style={{ marginTop: "1rem" }}>
-              <Button
+              <LoadingButton
                 color="info"
                 variant="contained"
                 onClick={() => handleResponse(true)}
+                loading={loading}
               >
                 Share Access
-              </Button>
+              </LoadingButton>
             </div>
           ) : type === "rejected" ? (
             <></>

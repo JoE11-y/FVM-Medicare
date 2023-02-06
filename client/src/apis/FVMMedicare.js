@@ -66,21 +66,30 @@ export const loadAppointments = async (address, contract, isDoctor = true) => {
     let patientMessage;
     let doctorMessage;
 
-    patientMessage = await getUserMessage(
-      address,
-      appointmentData.patientAddress,
-      appointmentData.uniqueKey
-    );
-    doctorMessage = await getUserMessage(
-      address,
-      appointmentData.doctorAddress,
-      appointmentData.uniqueKey
-    );
-
     if (isDoctor) {
-      info = await getInformation(contract, appointmentData.patientInfo);
+      info = await getInformation(contract, appointmentData.patientAddress);
+      patientMessage = await getUserMessage(
+        address,
+        appointmentData.patientAddress,
+        appointmentData.uniqueKey
+      );
+      doctorMessage = await getUserMessage(
+        appointmentData.patientAddress,
+        address,
+        appointmentData.uniqueKey
+      );
     } else {
       info = await getInformation(contract, appointmentData.doctorAddress);
+      patientMessage = await getUserMessage(
+        appointmentData.doctorAddress,
+        address,
+        appointmentData.uniqueKey
+      );
+      doctorMessage = await getUserMessage(
+        address,
+        appointmentData.doctorAddress,
+        appointmentData.uniqueKey
+      );
     }
 
     let appointment = {

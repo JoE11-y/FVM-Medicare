@@ -1,7 +1,4 @@
-import { Modal } from "@mui/material"
-import { Box } from "@mui/system"
-import React from "react"
-import { PatientRecord } from "./PatientRecord"
+import React from "react";
 
 export const MedicalRecordCard = ({ patientData }) => {
   return (
@@ -30,28 +27,5 @@ export const MedicalRecordCard = ({ patientData }) => {
         </div>
       </div>
     </div>
-  )
-}
-
-const MedicalRecordModal = ({ open, handleClose, id }) => {
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "60%",
-    maxHeight: "90vh",
-    bgcolor: "#fff",
-    boxShadow: 24,
-    p: 4,
-    borderRadius: "10px",
-    overflowY: "scroll",
-  }
-  return (
-    <Modal open={open} onClose={handleClose}>
-      <Box sx={style}>
-        <PatientRecord />
-      </Box>
-    </Modal>
-  )
-}
+  );
+};

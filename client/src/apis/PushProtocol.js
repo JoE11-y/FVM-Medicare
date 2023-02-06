@@ -38,7 +38,7 @@ export const sendMessage = async (
   }
 };
 
-export const getNotifications = async (userAddress) => {
+const getNotifications = async (userAddress) => {
   try {
     const notifications = await PushAPI.user.getFeeds({
       user: `eip155:5:${userAddress}`, // user address in CAIP
@@ -57,13 +57,13 @@ export const getUserMessage = async (
   msgUniqueKey
 ) => {
   const notifications = await getNotifications(userAddress);
-  console.log(notifications);
+
   let message = "";
   for (let i = 0; i < notifications.length; i++) {
     const currNotification = notifications[i];
     if (currNotification.app !== "FVM Medicare") continue;
     const notificationTitle = currNotification.notification["body"];
-    const uniquekey = currNotification.title.slice(9);
+    const uniquekey = currNotification.title.slice(8);
     const address = notificationTitle.slice(5);
     if (
       address.toLowerCase() !== addressFrom.toLowerCase() ||
@@ -73,5 +73,6 @@ export const getUserMessage = async (
     message = currNotification.message;
     break;
   }
+  // console.log(message);
   return message;
 };

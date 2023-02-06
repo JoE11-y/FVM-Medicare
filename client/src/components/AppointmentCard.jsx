@@ -2,9 +2,18 @@ import React, { useContext } from "react";
 import { AcceptAppointment } from "./AcceptAppointment";
 import { DeclineAppointment } from "./DeclineAppointment";
 import { appointmentSummaryContext } from "../context";
+import { IpfsImage } from "react-ipfs-image";
 
 export const AppointmentCard = ({ appointment, border, cursor, index }) => {
   const { dispatch } = useContext(appointmentSummaryContext);
+  const type = [
+    "Medical Checkup",
+    "Weekly Visit",
+    "Lab Test",
+    "Surgery",
+    "Get Report",
+    "Others",
+  ];
   return (
     <div
       className="appointment-card"
@@ -16,11 +25,24 @@ export const AppointmentCard = ({ appointment, border, cursor, index }) => {
       }}
     >
       <div className="appointment-img">
-        <img src={appointment.image} alt="" srcSet="" />
+        <IpfsImage
+          hash={
+            appointment.image
+              ? appointment.image
+              : "Qme8SriYgGNoXQzG1qYYZKThv3QTBf7pMJwUpu3gqaqQRH"
+          }
+          gatewayUrl={
+            appointment.image
+              ? "https://gateway.lighthouse.storage/ipfs"
+              : "https://gateway.pinata.cloud/ipfs"
+          }
+        />
       </div>
       <div className="patient-name">
         <p>{appointment.name}</p>
-        <small style={{ opacity: 0.5 }}>{appointment.appointmentType}</small>
+        <small style={{ opacity: 0.5 }}>
+          {type[appointment.appointmentType.toNumber()]}
+        </small>
       </div>
       {appointment.appointmentStatus === 2 ? (
         appointment.requestStatus === 1 && !appointment.medicalRecordShared ? (

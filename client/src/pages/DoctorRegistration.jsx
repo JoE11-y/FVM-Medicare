@@ -4,17 +4,15 @@ import { useSigner, useProvider } from "wagmi";
 import { useFVMMedicareContract } from "../hooks";
 import { Logo } from "../components/Logo";
 import { uploadFile, uploadEncryptedData } from "../apis/Lighthouse";
+import img from "../images/doctor.jpg";
 import DatePicker from "react-date-picker";
 import { useNavigate } from "react-router-dom";
 import LoadingButton from "@mui/lab/LoadingButton";
-// import CircularLoader from "../components/CircularLoader";
 
 export const DoctorRegistration = () => {
   const navigate = useNavigate();
   const { data: signer, isFetched } = useSigner();
   const [loading, setLoading] = useState(false);
-  // const [loading1, setLoading1] = useState(false);
-  // const [loading2, setLoading2] = useState(false);
   const provider = useProvider();
   const contract = useFVMMedicareContract(provider);
   const [dob, setDob] = useState(new Date());
@@ -29,9 +27,6 @@ export const DoctorRegistration = () => {
 
   const handleFileUpload = async (e, file) => {
     if (!isFetched) return;
-    // if (file === "image") setLoading1(true);
-    // if (file === "doc") setLoading2(true);
-    console.log(e);
     try {
       const output = await uploadFile(e, signer);
       if (!output) return;

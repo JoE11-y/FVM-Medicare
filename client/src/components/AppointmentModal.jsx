@@ -6,13 +6,14 @@ import {
   Modal,
   AlertTitle,
   TextField,
-  Button,
   FormControl,
 } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { useSigner, useProvider } from "wagmi";
 import { respondToAppointment } from "../apis/FVMMedicare";
 import { sendMessage } from "../apis/PushProtocol";
 import { useFVMMedicareContract } from "../hooks";
+import { IpfsImage } from "react-ipfs-image";
 
 export const AppointmentModal = ({
   appointment,
@@ -33,6 +34,7 @@ export const AppointmentModal = ({
     borderRadius: "10px",
   };
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { data: signer, isFetching } = useSigner();
 
@@ -41,6 +43,7 @@ export const AppointmentModal = ({
   const contract = useFVMMedicareContract(provider);
 
   const handleResponse = async () => {
+    setLoading(true);
     if (!message && isFetching) return;
     let response;
     try {
@@ -55,16 +58,18 @@ export const AppointmentModal = ({
         );
       }
 
-      if (!toDecline && response.status !== 204) return;
+      if (!toDecline && response !== 204) return;
 
       const Txn = await respondToAppointment(
         linkedContract,
         appointment.appointmentId,
-        toDecline
+        !toDecline
       );
       await Txn.wait();
     } catch (e) {
       console.log(e.message);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -90,6 +95,18 @@ export const AppointmentModal = ({
             className="appointment-img"
             style={{ border: "none", width: "3.6rem", height: "3.6rem" }}
           >
+            <IpfsImage
+              hash={
+                appointment.image
+                  ? appointment.image
+                  : "Qme8SriYgGNoXQzG1qYYZKThv3QTBf7pMJwUpu3gqaqQRH"
+              }
+              gatewayUrl={
+                appointment.image
+                  ? "https://gateway.lighthouse.storage/ipfs"
+                  : "https://gateway.pinata.cloud/ipfs"
+              }
+            />
             <img src={appointment.image} alt="patient icon" />
           </div>
           <div className="patient-name">
@@ -111,26 +128,28 @@ export const AppointmentModal = ({
               onChange={(e) => setMessage(e.target.value)}
               sx={{ marginTop: "1rem" }}
             />
-            <Button
+            <LoadingButton
               variant="contained"
               fullWidth
               sx={{ marginTop: "0.7rem" }}
               size="medium"
               onClick={() => handleResponse()}
+              loading={loading}
             >
               Request Medical Records
-            </Button>
+            </LoadingButton>
           </FormControl>
         ) : (
-          <Button
+          <LoadingButton
             variant="contained"
             color="error"
             fullWidth
             sx={{ marginTop: "1rem" }}
             onClick={() => handleResponse()}
+            loading={loading}
           >
             Decline Appointment
-          </Button>
+          </LoadingButton>
         )}
       </Box>
     </Modal>
