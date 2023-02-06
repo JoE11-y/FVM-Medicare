@@ -3,6 +3,7 @@ import React, { useState } from "react"
 import { useSigner, useProvider } from "wagmi"
 import { useFVMMedicareContract } from "../hooks"
 import { Logo } from "../components/Logo"
+import img from "../images/doctor.jpg"
 import { uploadFile, uploadEncryptedData } from "../apis/Lighthouse"
 import DatePicker from "react-date-picker"
 
@@ -181,9 +182,8 @@ export const DoctorRegistration = () => {
             </Button>
           </FormControl>
         </div>
-        <div className="reg-ball">
-          <div className="ball"></div>
-          <div className="blur-ball"></div>
+        <div className="reg-img">
+          <img src={img} alt="" />
         </div>
       </div>
     </div>
