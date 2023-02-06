@@ -1,57 +1,57 @@
-import { Alert, AlertTitle, Button } from "@mui/material"
-import React from "react"
-import { useSigner, useProvider } from "wagmi"
-import { Icon } from "@mui/material"
-import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy"
-import { useFVMMedicareContract } from "../hooks"
-import { VideoCall } from "./VideoCall"
-import { respondToDataRequest } from "../apis/FVMMedicare"
-import { revokeAccess, shareAccess } from "../apis/Lighthouse"
+import { Alert, AlertTitle, Button } from "@mui/material";
+import React from "react";
+import { useSigner, useProvider } from "wagmi";
+import { Icon } from "@mui/material";
+import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
+import { useFVMMedicareContract } from "../hooks";
+import { VideoCall } from "./VideoCall";
+import { respondToDataRequest } from "../apis/FVMMedicare";
+import { revokeAccess, shareAccess } from "../apis/Lighthouse";
 
 export const PatientAppointmentCard = ({ appointment, type }) => {
-  const provider = useProvider()
-  const { data: signer, isFetched } = useSigner()
-  const contract = useFVMMedicareContract(provider)
+  const provider = useProvider();
+  const { data: signer, isFetched } = useSigner();
+  const contract = useFVMMedicareContract(provider);
 
   const handleResponse = async (response) => {
-    if (!isFetched) return
-    const linkedContract = contract.connect(signer)
+    if (!isFetched) return;
+    const linkedContract = contract.connect(signer);
     try {
       if (response) {
         const result = await shareAccess(
           appointment.cid,
           signer,
           appointment.doctorAddress
-        )
+        );
         if (result.status === "Success") {
           const Txn = await respondToDataRequest(
             linkedContract,
             appointment.appointmentId,
             response
-          )
+          );
 
-          await Txn.wait()
+          await Txn.wait();
         }
       } else {
         const result = await revokeAccess(
           appointment.cid,
           signer,
           appointment.doctorAddress
-        )
+        );
         if (result.status === "Success") {
           const Txn = await respondToDataRequest(
             linkedContract,
             appointment.appointmentId,
             response
-          )
+          );
 
-          await Txn.wait()
+          await Txn.wait();
         }
       }
     } catch (e) {
-      console.log(e.message)
+      console.log(e.message);
     }
-  }
+  };
 
   return (
     <div>
@@ -94,10 +94,17 @@ export const PatientAppointmentCard = ({ appointment, type }) => {
           </div>
         </div>
         <div className="doctor-message">
-          <Alert severity="info">
-            <AlertTitle>Doctor's message</AlertTitle>
-            <p>{appointment.message}</p>
-          </Alert>
+          {appointment.appointmentStatus === 1 ? (
+            <Alert severity="info">
+              <AlertTitle>Your message</AlertTitle>
+              <p>{appointment.patientMessage}</p>
+            </Alert>
+          ) : (
+            <Alert severity="info">
+              <AlertTitle>Doctor's message</AlertTitle>
+              <p>{appointment.doctorMessage}</p>
+            </Alert>
+          )}
         </div>
 
         <div style={{ marginTop: "1rem" }}>
@@ -116,7 +123,7 @@ export const PatientAppointmentCard = ({ appointment, type }) => {
                 <Button
                   color="primary"
                   variant="contained"
-                  // onClick={() => handleResponse(false)}
+                  onClick={() => handleResponse(false)}
                 >
                   Revoke Access
                 </Button>
@@ -127,7 +134,7 @@ export const PatientAppointmentCard = ({ appointment, type }) => {
               <Button
                 color="info"
                 variant="contained"
-                // onClick={() => handleResponse(true)}
+                onClick={() => handleResponse(true)}
               >
                 Share Access
               </Button>
@@ -138,5 +145,5 @@ export const PatientAppointmentCard = ({ appointment, type }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

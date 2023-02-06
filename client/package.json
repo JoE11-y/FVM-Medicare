@@ -8,6 +8,7 @@
     "@huddle01/huddle01-iframe": "^0.0.8",
     "@lighthouse-web3/sdk": "^0.1.12",
     "@mui/icons-material": "^5.11.0",
+    "@mui/lab": "^5.0.0-alpha.118",
     "@mui/material": "^5.11.5",
     "@peculiar/webcrypto": "^1.4.1",
     "@pushprotocol/restapi": "^0.3.1",

@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { useSigner } from "wagmi";
 import { VideoCall } from "./VideoCall";
 import { appointmentSummaryContext } from "../context";
 import { PatientRecords } from "./PatientRecords";
@@ -9,8 +8,6 @@ export const PatientSummary = () => {
   const {
     state: { appointment },
   } = useContext(appointmentSummaryContext);
-
-  // const { data: signer, isFetched } = useSigner();
 
   return (
     <div>
@@ -44,19 +41,19 @@ export const PatientSummary = () => {
         <div className="previous-actions">
           <div className="previous-action">
             <h5>Patient Message</h5>
-            <small>{appointment.message}</small>
+            <small>{appointment?.patientMessage}</small>
           </div>
           <div className="previous-action">
             <h5>Your Message</h5>
-            <small>{appointment.doctorMessage}.</small>
+            <small>{appointment?.doctorMessage}.</small>
           </div>
         </div>
 
-        <VideoCall meetId={appointment?.appointmentKey} />
+        <VideoCall meetId={appointment?.uniqueKey} />
       </div>
       <PatientRecords
         open={open}
-        appointment={appointment}
+        appointment={appointment ? appointment : {}}
         handleClose={() => setOpen(!open)}
       />
     </div>

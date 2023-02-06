@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAccount, useProvider } from "wagmi";
 import { useDoctorNFTContract, usePatientNFTContract } from "../hooks";
@@ -10,7 +10,7 @@ import { ConnectWallet } from "../components/ConnectWallet";
 import { NavBarIcon } from "../components/NavBarIcon";
 import { Logo } from "../components/Logo";
 import { DesktopNav } from "../components/DesktopNav";
-import { Button } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const container = {
   hidden: { opacity: 1, scale: 0.5 },
@@ -36,22 +36,31 @@ export const LandingPage = () => {
   const navigate = useNavigate();
   const provider = useProvider();
 
+  const [loading, setLoading] = useState(false);
+
   const { isConnected, address } = useAccount();
 
   const doctorNFTContract = useDoctorNFTContract(provider);
   const patientNFTContract = usePatientNFTContract(provider);
 
   const checkUser = useCallback(async () => {
-    const isDoctor = await doctorNFTContract.isTokenHolder(address);
+    setLoading(true);
+    try {
+      const isDoctor = await doctorNFTContract.isTokenHolder(address);
 
-    const isPatient = await patientNFTContract.isTokenHolder(address);
+      const isPatient = await patientNFTContract.isTokenHolder(address);
 
-    if (isDoctor) {
-      navigate("/doctor-dashboard");
-    } else if (isPatient) {
-      navigate("/patient-dashboard");
-    } else {
-      navigate("/choose-user");
+      if (isDoctor) {
+        navigate("/doctor-dashboard");
+      } else if (isPatient) {
+        navigate("/patient-dashboard");
+      } else {
+        navigate("/choose-user");
+      }
+    } catch (e) {
+      console.log(e.message);
+    } finally {
+      setLoading(false);
     }
   }, [address, navigate, doctorNFTContract, patientNFTContract]);
 
@@ -82,13 +91,14 @@ export const LandingPage = () => {
               vel excepturi.
             </p>
             {isConnected ? (
-              <Button
+              <LoadingButton
                 variant="contained"
                 sx={{ marginTop: "1rem" }}
                 onClick={() => checkUser()}
+                loading={loading}
               >
                 Get Started
-              </Button>
+              </LoadingButton>
             ) : (
               <></>
             )}

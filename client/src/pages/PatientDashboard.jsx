@@ -10,7 +10,6 @@ import { LeftSide } from "../components/PatientDashBoard/LeftSide";
 import { RightSide } from "../components/PatientDashBoard/RightSide";
 import { Loader } from "../components/Loader";
 import { downloadNDecryptData } from "../apis/Lighthouse";
-
 export const PatientDashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);

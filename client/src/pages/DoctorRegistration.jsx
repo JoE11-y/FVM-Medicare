@@ -1,4 +1,4 @@
-import { Button, FormControl, TextField } from "@mui/material";
+import { FormControl, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useSigner, useProvider } from "wagmi";
 import { useFVMMedicareContract } from "../hooks";
@@ -6,10 +6,15 @@ import { Logo } from "../components/Logo";
 import { uploadFile, uploadEncryptedData } from "../apis/Lighthouse";
 import DatePicker from "react-date-picker";
 import { useNavigate } from "react-router-dom";
+import LoadingButton from "@mui/lab/LoadingButton";
+// import CircularLoader from "../components/CircularLoader";
 
 export const DoctorRegistration = () => {
   const navigate = useNavigate();
   const { data: signer, isFetched } = useSigner();
+  const [loading, setLoading] = useState(false);
+  // const [loading1, setLoading1] = useState(false);
+  // const [loading2, setLoading2] = useState(false);
   const provider = useProvider();
   const contract = useFVMMedicareContract(provider);
   const [dob, setDob] = useState(new Date());
@@ -24,6 +29,8 @@ export const DoctorRegistration = () => {
 
   const handleFileUpload = async (e, file) => {
     if (!isFetched) return;
+    // if (file === "image") setLoading1(true);
+    // if (file === "doc") setLoading2(true);
     console.log(e);
     try {
       const output = await uploadFile(e, signer);
@@ -35,6 +42,9 @@ export const DoctorRegistration = () => {
       console.log(output.data.Hash);
     } catch (e) {
       console.log(e.message);
+    } finally {
+      // setLoading1(false);
+      // setLoading2(false);
     }
   };
 
@@ -52,6 +62,7 @@ export const DoctorRegistration = () => {
     );
 
   const handleDataUpload = async () => {
+    setLoading(true);
     if (formNotFilled && !isFetched) return;
     try {
       const linkedContract = contract.connect(signer);
@@ -82,6 +93,8 @@ export const DoctorRegistration = () => {
       navigate("/doctor-dashboard");
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -161,6 +174,8 @@ export const DoctorRegistration = () => {
                 id="doctor-picture"
                 onChange={(e) => handleFileUpload(e, "image")}
               />
+              {/* <CircularLoader />
+              {loading1 ? <CircularLoader /> : null} */}
             </div>
             <div>
               <label
@@ -174,15 +189,17 @@ export const DoctorRegistration = () => {
                 id="cop-picture"
                 onChange={(e) => handleFileUpload(e, "doc")}
               />
+              {/* {loading2 ? <CircularLoader /> : null} */}
             </div>
-            <Button
+            <LoadingButton
               variant="contained"
               sx={{ marginTop: "1rem" }}
               disabled={formNotFilled()}
+              loading={loading}
               onClick={() => handleDataUpload()}
             >
               Register
-            </Button>
+            </LoadingButton>
           </FormControl>
         </div>
         <div className="reg-ball">

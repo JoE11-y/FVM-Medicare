@@ -1,16 +1,15 @@
+import React, { useState } from "react";
 import {
   Icon,
-  Typography,
   Box,
   Modal,
-  Button,
   TextField,
   Select,
   MenuItem,
   InputLabel,
   FormControl,
 } from "@mui/material";
-import React, { useState } from "react";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { useSigner, useProvider } from "wagmi";
 import { makeAppointment } from "../apis/FVMMedicare";
 import MedicationIcon from "@mui/icons-material/Medication";
@@ -32,11 +31,12 @@ const style = {
 
 export const MeetADoctor = () => {
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
   const [doctorAddress, setDoctorAddress] = useState("");
   const [message, setMessage] = useState("");
-  const [appointmentType, setAppointmentType] = useState(null);
+  const [appointmentType, setAppointmentType] = useState("");
 
   const { data: signer, isFetching } = useSigner();
   const provider = useProvider();
@@ -44,18 +44,20 @@ export const MeetADoctor = () => {
   const contract = useFVMMedicareContract(provider);
 
   const sendAppointment = async () => {
+    setLoading(true);
     if (!message || !appointmentType || !doctorAddress || isFetching) return;
     const uniqueKey = v4();
     try {
       const linkedContract = contract.connect(signer);
       const address = await signer.getAddress();
+      console.log((address, message, doctorAddress, uniqueKey));
       const response = await sendMessage(
         address,
         message,
         doctorAddress,
         uniqueKey
       );
-      if (response.status === 204) {
+      if (response === 204) {
         const Txn = await makeAppointment(
           linkedContract,
           doctorAddress,
@@ -66,6 +68,8 @@ export const MeetADoctor = () => {
       }
     } catch (e) {
       console.log(e.message);
+    } finally {
+      setLoading(false);
     }
   };
   const handleSelect = (event) => {
@@ -101,12 +105,12 @@ export const MeetADoctor = () => {
               value={appointmentType}
               onChange={handleSelect}
             >
-              <MenuItem value={0}>Medical Checkup</MenuItem>
-              <MenuItem value={1}>Weekly visit</MenuItem>
-              <MenuItem value={2}>Lab Test</MenuItem>
-              <MenuItem value={3}>Surgery</MenuItem>
-              <MenuItem value={4}>Get Report</MenuItem>
-              <MenuItem value={5}>Others</MenuItem>
+              <MenuItem value={"0"}>Medical Checkup</MenuItem>
+              <MenuItem value={"1"}>Weekly visit</MenuItem>
+              <MenuItem value={"2"}>Lab Test</MenuItem>
+              <MenuItem value={"3"}>Surgery</MenuItem>
+              <MenuItem value={"4"}>Get Report</MenuItem>
+              <MenuItem value={"5"}>Others</MenuItem>
             </Select>
             <TextField
               label="Doctor's ID"
@@ -126,15 +130,15 @@ export const MeetADoctor = () => {
               onChange={(e) => setMessage(e.target.value)}
             />
 
-            <Button
+            <LoadingButton
               fullWidth
               sx={{ marginTop: "1rem" }}
               variant="contained"
-              onClick={() => console.log(message)}
-              //onClick={() => sendAppointment()}
+              onClick={() => sendAppointment()}
+              loading={loading}
             >
               Send Meeting Request
-            </Button>
+            </LoadingButton>
           </FormControl>
         </Box>
       </Modal>

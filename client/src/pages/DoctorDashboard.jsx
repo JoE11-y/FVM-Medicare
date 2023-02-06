@@ -29,7 +29,6 @@ export const DoctorDashboard = () => {
     setLoading(true);
     try {
       if (isFetched) {
-        console.log("done");
         const nftContractLinked = nftContract.connect(signer);
         const tokenId = await nftContractLinked.getTokenId(address);
         const doctorCID = await nftContractLinked.tokenURI(tokenId);
