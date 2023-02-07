@@ -11,7 +11,7 @@ export const DesktopNav = ({ style }) => {
       </li>
       <li>
         <a
-          href={`https://github.com/JoE11-y/FVM-Medicare/blob/master/client/README.md`}
+          href={`https://github.com/JoE11-y/FVM-Medicare#readme`}
           target="_blank"
           rel="noreferrer"
           style={style}
